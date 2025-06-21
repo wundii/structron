@@ -1,0 +1,5 @@
+/.idea/
+/.structron/
+/cache/*
+/vendor/
+composer.lock

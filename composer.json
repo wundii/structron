@@ -1,0 +1,91 @@
+{
+  "name": "wundii/structron",
+  "description": "A PHP library for generating human-readable documentation from structured data objects like DTOs, Entities, and Value Objects.",
+  "keywords": [
+    "documentation",
+    "doc generator",
+    "phpdoc",
+    "dto",
+    "entity",
+    "value object",
+    "reflection",
+    "code generator",
+    "markdown",
+    "doc tool",
+    "php"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andreas Wunderwald",
+      "email": "wundii@gmail.com"
+    }
+  ],
+  "bin": [
+    "bin/structron"
+  ],
+  "require": {
+    "php": ">=8.2",
+    "ext-json": "*",
+    "symfony/cache": "^6.4 || ^7.0",
+    "symfony/config": "^6.4 || ^7.0",
+    "symfony/console": "^6.4 || ^7.0",
+    "symfony/dependency-injection": "^6.4 || ^7.0",
+    "symfony/finder": "^6.4 || ^7.0",
+    "symfony/process": "^6.4 || ^7.0",
+    "webmozart/assert": "^1.11"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.0",
+    "phpstan/phpstan-strict-rules": "^2.0",
+    "phpunit/phpunit": "^11.5",
+    "rector/rector": "^2.0",
+    "symfony/var-dumper": "^7.0",
+    "symplify/easy-coding-standard": "^12.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wundii\\Structron\\": "src/"
+    }
+  },
+  "scripts": {
+    "auto-scripts": {
+    },
+    "post-install-cmd": [
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "@auto-scripts"
+    ],
+    "complete-check": [
+      "@cache-clear",
+      "@rector-dry",
+      "@phpstan",
+      "@ecs-dry",
+      "@unittest"
+    ],
+    "rector-dry": [
+      "php vendor/bin/rector process --dry-run --ansi"
+    ],
+    "rector-apply": [
+      "php vendor/bin/rector process --ansi"
+    ],
+    "ecs-dry": [
+      "php vendor/bin/ecs check"
+    ],
+    "ecs-apply": [
+      "php vendor/bin/ecs check --fix"
+    ],
+    "phpstan": [
+      "php vendor/bin/phpstan analyse"
+    ],
+    "unittest": [
+      "php vendor/bin/phpunit --configuration phpunit.xml"
+    ],
+    "cache-clear": [
+      "rm -R ./cache/* -f"
+    ]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
