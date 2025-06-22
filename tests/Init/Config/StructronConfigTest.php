@@ -84,4 +84,19 @@ class StructronConfigTest extends TestCase
 
         $this->assertEquals('php8', $structronConfig->getString(OptionEnum::PHP_EXTENSION));
     }
+
+    public function testGetDefaultDocPath()
+    {
+        $structronConfig = new StructronConfig();
+
+        $this->assertEquals('structron-docs', $structronConfig->getString(OptionEnum::DOC_PATH));
+    }
+
+    public function testSetDocPath()
+    {
+        $structronConfig = new StructronConfig();
+        $structronConfig->docPath('doc/path');
+
+        $this->assertEquals('doc/path', $structronConfig->getString(OptionEnum::DOC_PATH));
+    }
 }

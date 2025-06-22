@@ -32,6 +32,11 @@ enum OptionEnum: string
     case SKIP = 'skip';
 
     /**
+     * @internal
+     */
+    case DOC_PATH = 'doc-path';
+
+    /**
      * @internal only for unit tests
      */
     case TEST = 'test';

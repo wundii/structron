@@ -26,10 +26,11 @@ final class Structron
 
         $test = $this->structronConfig->getParameter(OptionEnum::TEST);
         $this->structronConfig->setParameter(OptionEnum::TEST, $test);
-        // foreach() {
-        //
-        //     $this->structronSymfonyStyle->progressBarAdvance();
-        // }
+        foreach ($this->structronFinder->files() as $structronFinder) {
+            // $structronFinder->getRelativePath();
+            $this->structronSymfonyStyle->progressBarAdvance();
+
+        }
 
         $this->structronSymfonyStyle->progressBarFinish();
         // $this->processResultToConsole($processResult);
