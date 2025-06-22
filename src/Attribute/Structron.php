@@ -8,7 +8,7 @@ use Attribute;
 use Wundii\DataMapper\Interface\AttributeInterface;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class Structron implements AttributeInterface
+final readonly class Structron implements AttributeInterface
 {
     public function __construct(
         private string $description,

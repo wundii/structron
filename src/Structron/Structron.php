@@ -78,6 +78,8 @@ final class Structron
                 throw new Exception(sprintf('File %s does not exist', $pathname));
             }
 
+            $this->structronSymfonyStyle->progressBarAdvance();
+
             $structronCollectionResolver = new StructronCollectionResolver();
             $structronCollectionDto = $structronCollectionResolver->resolve(
                 $this->declaredClasses[$pathname],
@@ -89,8 +91,6 @@ final class Structron
 
             $structronDocsResolver = new StructronDocsResolver($this->structronConfig);
             $structronDocsResolver->resolve($structronCollectionDto);
-
-            $this->structronSymfonyStyle->progressBarAdvance();
         }
 
         $this->structronSymfonyStyle->progressBarFinish();

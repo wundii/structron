@@ -25,6 +25,6 @@ class StructronDocsResolver
 
         $path = $this->structronConfig->getString(OptionEnum::DOC_PATH);
 
-        return (bool) file_put_contents($path . '/index.md', '# Structron Documentation');
+        return (bool) file_put_contents(__DIR__ . '/' . $path . '/index.md', '# Structron Documentation');
     }
 }
