@@ -15,6 +15,7 @@ use Wundii\Structron\Dto\ReflectionDto;
 use Wundii\Structron\Dto\StructronCollectionDto;
 use Wundii\Structron\Finder\StructronFinder;
 use Wundii\Structron\Resolver\StructronCollectionResolver;
+use Wundii\Structron\Resolver\StructronDocsResolver;
 
 final class Structron
 {
@@ -85,6 +86,9 @@ final class Structron
             if (! $structronCollectionDto instanceof StructronCollectionDto) {
                 continue;
             }
+
+            $structronDocsResolver = new StructronDocsResolver($this->structronConfig);
+            $structronDocsResolver->resolve($structronCollectionDto);
 
             $this->structronSymfonyStyle->progressBarAdvance();
         }
