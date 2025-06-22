@@ -6,8 +6,8 @@ namespace Init\Config;
 
 use PHPUnit\Framework\TestCase;
 use Webmozart\Assert\InvalidArgumentException;
-use Wundii\Structron\Config\StructronConfigParameter;
 use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfigParameter;
 
 class StructronConfigParameterTest extends TestCase
 {

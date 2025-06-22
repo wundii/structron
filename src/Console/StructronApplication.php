@@ -27,7 +27,7 @@ final class StructronApplication extends BaseApplication
     /**
      * @var string
      */
-    public const VERSION = '0.3';
+    public const VERSION = '1.0.0';
 
     public function __construct(
         StructronCommand $structronCommand,
@@ -56,7 +56,7 @@ final class StructronApplication extends BaseApplication
         $symfonyStyle = new SymfonyStyle($argvInput, $output);
 
         $symfonyStyle->writeln('> ' . implode(' ', $argv));
-        $symfonyStyle->writeln('<fg=blue;options=bold>PHP</><fg=yellow;options=bold>Structron</> ' . self::vendorVersion());
+        $symfonyStyle->writeln(sprintf('<fg=blue;options=bold>PHP</><fg=yellow;options=bold>%s</> %s', self::NAME, self::vendorVersion()));
         $symfonyStyle->newLine();
 
         $symfonyStyle->error($throwable->getMessage());
@@ -86,6 +86,10 @@ final class StructronApplication extends BaseApplication
         }
 
         foreach ($packages as $package) {
+            if (! is_array($package)) {
+                continue;
+            }
+
             if (! array_key_exists('name', $package)) {
                 continue;
             }

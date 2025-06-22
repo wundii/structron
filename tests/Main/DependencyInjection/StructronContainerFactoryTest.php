@@ -8,8 +8,8 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\DependencyInjection\StructronContainerFactory;
 
 class StructronContainerFactoryTest extends TestCase
@@ -26,7 +26,7 @@ class StructronContainerFactoryTest extends TestCase
         $container = $factory->createFromArgvInput($argvInput);
 
         $this->assertInstanceOf(ContainerInterface::class, $container);
-        $this->assertEquals('php', $container->get(StructronConfig::class)->getString(OptionEnum::PHP_CGI_EXECUTABLE));
+        $this->assertEquals('php', $container->get(StructronConfig::class)->getString(OptionEnum::PHP_EXTENSION));
     }
 
     /**
@@ -43,6 +43,6 @@ class StructronContainerFactoryTest extends TestCase
         $container = $factory->createFromArgvInput($argvInput);
 
         $this->assertInstanceOf(ContainerInterface::class, $container);
-        $this->assertEquals('TimTest', $container->get(StructronConfig::class)->getString(OptionEnum::PHP_CGI_EXECUTABLE));
+        $this->assertEquals('TimTest', $container->get(StructronConfig::class)->getString(OptionEnum::PHP_EXTENSION));
     }
 }

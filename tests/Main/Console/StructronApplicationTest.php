@@ -13,13 +13,11 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Wundii\Structron\Bootstrap\BootstrapConfigInitializer;
-use Wundii\Structron\Bootstrap\BootstrapConfigResolver;
-use Wundii\Structron\Bootstrap\BootstrapInputResolver;
 use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Commands\StructronCommand;
 use Wundii\Structron\Console\Commands\StructronInitCommand;
-use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Console\Output\StructronSymfonyStyle;
+use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Finder\StructronFinder;
 use Wundii\Structron\Resolver\Config\StructronPathsResolver;
 use Wundii\Structron\Resolver\Config\StructronSkipPathsResolver;
@@ -38,17 +36,12 @@ class StructronApplicationTest extends TestCase
         $consoleOutput = new StreamOutput(fopen('php://memory', 'w', false));
         $structronConsoleOutput = new StructronSymfonyStyle($structronConfig, $consoleInput, $consoleOutput);
         $bootstrapConfigInitializer = new BootstrapConfigInitializer(new Filesystem(), $structronConsoleOutput);
-        $bootstrapInputResolver = new BootstrapInputResolver($consoleInput);
-        $bootstrapConfigResolver = new BootstrapConfigResolver($bootstrapInputResolver);
         $structronConfig->paths(['src']);
         $structronFinder = new StructronFinder(
             new StructronSkipPathsResolver(),
             new StructronPathsResolver(),
         );
         $structronCommand = new StructronCommand(
-            $bootstrapConfigInitializer,
-            $bootstrapConfigResolver,
-            $bootstrapInputResolver,
             $structronConfig,
             $structronFinder
         );

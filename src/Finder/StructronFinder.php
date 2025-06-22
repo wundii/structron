@@ -9,8 +9,8 @@ use Iterator;
 use LogicException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Resolver\Config\StructronPathsResolver;
 use Wundii\Structron\Resolver\Config\StructronSkipPathsResolver;
 
@@ -26,7 +26,7 @@ final class StructronFinder extends Finder
     public function getFilesFromStructronConfig(StructronConfig $structronConfig): self
     {
         $excludes = $this->structronSkipPathsResolver->resolve($structronConfig);
-        $extension = $structronConfig->getString(OptionEnum::PHP_CGI_EXECUTABLE);
+        $extension = $structronConfig->getString(OptionEnum::PHP_EXTENSION);
 
         foreach ($this->structronPathsResolver->resolve($structronConfig) as $path) {
             if (! is_dir($path) && ! is_file($path)) {

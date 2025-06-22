@@ -8,11 +8,9 @@ use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\OutputColorEnum;
-use Wundii\Structron\Process\StructronProcessResult;
-use Wundii\Structron\Process\StatusEnum;
 
 final class StructronSymfonyStyle extends SymfonyStyle
 {
@@ -97,34 +95,35 @@ final class StructronSymfonyStyle extends SymfonyStyle
         $this->progressFinish();
     }
 
-    public function messageByProcessResult(StructronProcessResult $structronProcessResult): void
+    public function messageByProcessResult(): void
     {
-        $outputColorEnum = match ($structronProcessResult->getStatus()) {
-            StatusEnum::OK => OutputColorEnum::GREEN,
-            StatusEnum::NOTICE => OutputColorEnum::BLUE,
-            StatusEnum::WARNING => OutputColorEnum::YELLOW,
-            default => OutputColorEnum::RED,
-        };
+        // $outputColorEnum = match ($structronProcessResult->getStatus()) {
+        //     StatusEnum::OK => OutputColorEnum::GREEN,
+        //     StatusEnum::NOTICE => OutputColorEnum::BLUE,
+        //     StatusEnum::WARNING => OutputColorEnum::YELLOW,
+        //     default => OutputColorEnum::RED,
+        // };
+        $outputColorEnum = OutputColorEnum::BLUE;
 
         ++$this->countFiles;
 
         $line01 = sprintf(
             '<fg=white;options=bold>#%d - line %s </><fg=gray;options=bold>[%s]</>',
             $this->countFiles,
-            $structronProcessResult->getLine(),
-            $structronProcessResult->getFilename(),
+            1,
+            'as',
         );
         $line02 = sprintf(
             '<fg=%s;options=bold>%s</>: <fg=%s>%s</>',
             $outputColorEnum->getBrightValue(),
-            ucfirst($structronProcessResult->getStatus()->value),
+            ucfirst('ok'),
             $outputColorEnum->value,
-            $structronProcessResult->getResult(),
+            'asd',
         );
 
         $this->writeln($line01);
         $this->writeln($line02);
-        $this->loadCodeSnippet($structronProcessResult->getFilename(), (int) $structronProcessResult->getLine(), $outputColorEnum);
+        $this->loadCodeSnippet('file', 12, $outputColorEnum);
         $this->newLine();
 
         $this->isSuccess = false;

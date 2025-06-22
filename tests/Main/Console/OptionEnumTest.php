@@ -83,48 +83,6 @@ class OptionEnumTest extends TestCase
         $this->assertEquals($expected, $structronConfig);
     }
 
-    public function testCreateStructronConfigFromInputAsyncProcess()
-    {
-        unset($_SERVER['argv']);
-        $bootstrapInputResolver = new BootstrapInputResolver(
-            new ArgvInput(['bin/structron', OptionEnum::ASYNC_PROCESS->getName(), '5'])
-        );
-
-        $expected = new StructronConfig();
-        $expected->asyncProcess(5);
-        $structronConfig = OptionEnum::createStructronConfigFromInput($bootstrapInputResolver);
-
-        $this->assertEquals($expected, $structronConfig);
-    }
-
-    public function testCreateStructronConfigFromInputMemoryLimit()
-    {
-        unset($_SERVER['argv']);
-        $bootstrapInputResolver = new BootstrapInputResolver(
-            new ArgvInput(['bin/structron', OptionEnum::MEMORY_LIMIT->getName(), '1337K'])
-        );
-
-        $expected = new StructronConfig();
-        $expected->memoryLimit('1337K');
-        $structronConfig = OptionEnum::createStructronConfigFromInput($bootstrapInputResolver);
-
-        $this->assertEquals($expected, $structronConfig);
-    }
-
-    public function testCreateStructronConfigFromInputPhpExtension()
-    {
-        unset($_SERVER['argv']);
-        $bootstrapInputResolver = new BootstrapInputResolver(
-            new ArgvInput(['bin/structron', OptionEnum::PHP_EXTENSION->getName(), 'php3'])
-        );
-
-        $expected = new StructronConfig();
-        $expected->phpExtension('php3');
-        $structronConfig = OptionEnum::createStructronConfigFromInput($bootstrapInputResolver);
-
-        $this->assertEquals($expected, $structronConfig);
-    }
-
     public function testCreateStructronConfigFromInputNoExitCode()
     {
         unset($_SERVER['argv']);
@@ -203,18 +161,12 @@ class OptionEnumTest extends TestCase
     {
         $bootstrapInputResolver = new BootstrapInputResolver(
             new ArgvInput(['bin/structron',
-                OptionEnum::ASYNC_PROCESS->getName(), '8',
-                OptionEnum::MEMORY_LIMIT->getName(), '128M',
-                OptionEnum::PHP_EXTENSION->getName(), 'php4',
                 OptionEnum::NO_PROGRESS_BAR->getName(),
             ])
         );
 
         $expected = new StructronConfig();
-        $expected->asyncProcess(8);
         $expected->disableProcessBar();
-        $expected->memoryLimit('128M');
-        $expected->phpExtension('php4');
         $structronConfig = OptionEnum::createStructronConfigFromInput($bootstrapInputResolver);
 
         $this->assertEquals($expected, $structronConfig);

@@ -9,46 +9,6 @@ enum OptionEnum: string
     /**
      * @internal
      */
-    case ASYNC_PROCESS = 'async-process';
-
-    /**
-     * @internal
-     */
-    case ASYNC_PROCESS_TIMEOUT = 'async-process-timeout';
-
-    /**
-     * @internal
-     */
-    case CACHE = 'cache';
-
-    /**
-     * @internal
-     */
-    case CACHE_CLASS = 'cache-class';
-
-    /**
-     * @internal
-     */
-    case CACHE_DIR = 'cache-dir';
-
-    /**
-     * @internal
-     */
-    case CONSOLE_NOTICE = 'console-notice';
-
-    /**
-     * @internal
-     */
-    case CONSOLE_WARNING = 'console-warning';
-
-    /**
-     * @internal
-     */
-    case MEMORY_LIMIT = 'memory-limit';
-
-    /**
-     * @internal
-     */
     case NO_EXIT_CODE = 'no-exit-code';
 
     /**
@@ -60,11 +20,6 @@ enum OptionEnum: string
      * @internal
      */
     case PATHS = 'paths';
-
-    /**
-     * @internal
-     */
-    case PHP_CGI_EXECUTABLE = 'php-cgi-executable';
 
     /**
      * @internal

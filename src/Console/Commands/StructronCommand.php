@@ -9,23 +9,16 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Wundii\Structron\Bootstrap\BootstrapConfigInitializer;
-use Wundii\Structron\Bootstrap\BootstrapConfigResolver;
-use Wundii\Structron\Bootstrap\BootstrapInputResolver;
-use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Config\OptionEnum as ConfigOptionEnum;
-use Wundii\Structron\Console\StructronApplication;
-use Wundii\Structron\Console\OptionEnum;
+use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Output\StructronSymfonyStyle;
+use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Finder\StructronFinder;
 use Wundii\Structron\Structron\Structron;
 
 final class StructronCommand extends Command
 {
     public function __construct(
-        private readonly BootstrapConfigInitializer $bootstrapConfigInitializer,
-        private readonly BootstrapConfigResolver $bootstrapConfigResolver,
-        private readonly BootstrapInputResolver $bootstrapInputResolver,
         private readonly StructronConfig $structronConfig,
         private readonly StructronFinder $structronFinder,
     ) {
@@ -44,17 +37,6 @@ final class StructronCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $structronConfig = $this->structronConfig;
-        $noConfig = $this->bootstrapInputResolver->hasOption(OptionEnum::NO_CONFIG);
-
-        if (! $this->bootstrapConfigResolver->isConfigFileExists() || $noConfig) {
-            if (! $noConfig) {
-                $this->bootstrapConfigInitializer->createConfig((string) getcwd());
-                return self::SUCCESS;
-            }
-
-            $structronConfig = OptionEnum::createStructronConfigFromInput($this->bootstrapInputResolver);
-        }
-
         $startExecuteTime = microtime(true);
 
         $output = new StructronSymfonyStyle($structronConfig, $input, $output);

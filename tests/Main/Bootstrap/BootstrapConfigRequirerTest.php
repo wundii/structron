@@ -9,8 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Wundii\Structron\Bootstrap\BootstrapConfig;
 use Wundii\Structron\Bootstrap\BootstrapConfigRequirer;
-use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfig;
 
 class BootstrapConfigRequirerTest extends TestCase
 {
@@ -33,7 +33,7 @@ class BootstrapConfigRequirerTest extends TestCase
         $structronConfig = $requirer->loadConfigFile($structronConfig);
 
         $this->assertInstanceOf(StructronConfig::class, $structronConfig);
-        $this->assertEquals('phpUnitTest', $structronConfig->getString(OptionEnum::PHP_CGI_EXECUTABLE));
+        $this->assertEquals('phpUnitTest', $structronConfig->getString(OptionEnum::PHP_EXTENSION));
     }
 
     public function testGetStructronConfigWithInvalidConfigReturnString()

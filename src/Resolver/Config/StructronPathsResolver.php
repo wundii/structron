@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Wundii\Structron\Resolver\Config;
 
-use Wundii\Structron\Config\StructronConfigParameter;
 use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfigParameter;
 
 final class StructronPathsResolver
 {
