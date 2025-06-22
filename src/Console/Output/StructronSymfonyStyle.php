@@ -14,19 +14,7 @@ use Wundii\Structron\Console\OutputColorEnum;
 
 final class StructronSymfonyStyle extends SymfonyStyle
 {
-    /**
-     * @var int
-     */
-    private const SNIPPED_LINE = 5;
-
-    /**
-     * @var int
-     */
-    private const LINE_LENGTH = 5;
-
     private bool $isSuccess = true;
-
-    private int $countFiles = 0;
 
     public function __construct(
         private readonly StructronConfig $structronConfig,
@@ -95,112 +83,29 @@ final class StructronSymfonyStyle extends SymfonyStyle
         $this->progressFinish();
     }
 
-    public function messageByProcessResult(): void
-    {
-        // $outputColorEnum = match ($structronProcessResult->getStatus()) {
-        //     StatusEnum::OK => OutputColorEnum::GREEN,
-        //     StatusEnum::NOTICE => OutputColorEnum::BLUE,
-        //     StatusEnum::WARNING => OutputColorEnum::YELLOW,
-        //     default => OutputColorEnum::RED,
-        // };
-        $outputColorEnum = OutputColorEnum::BLUE;
-
-        ++$this->countFiles;
-
-        $line01 = sprintf(
-            '<fg=white;options=bold>#%d - line %s </><fg=gray;options=bold>[%s]</>',
-            $this->countFiles,
-            1,
-            'as',
-        );
-        $line02 = sprintf(
-            '<fg=%s;options=bold>%s</>: <fg=%s>%s</>',
-            $outputColorEnum->getBrightValue(),
-            ucfirst('ok'),
-            $outputColorEnum->value,
-            'asd',
-        );
-
-        $this->writeln($line01);
-        $this->writeln($line02);
-        $this->loadCodeSnippet('file', 12, $outputColorEnum);
-        $this->newLine();
-
-        $this->isSuccess = false;
-    }
-
-    public function generateStructron(string $value): void
-    {
-        $outputColorEnum = OutputColorEnum::BLUE;
-        ++$this->countFiles;
-
-        // $line01 = sprintf(
-        //     '<fg=white;options=bold>#%d - line %s </><fg=%s;options=bold>[%s]</>',
-        //     $this->countFiles,
-        //     $value,
-        //     $outputColorEnum->value,
-        //     'as',
-        // );
-        $line01 = sprintf(
-            '<fg=%s;options=bold>#%d - file: %s </><fg=%s;options=bold>[%s]</>',
-            $outputColorEnum->getBrightValue(),
-            $this->countFiles,
-            $value,
-            $outputColorEnum->value,
-            'as',
-        );
-
-        $this->newLine();
-        $this->writeln($line01);
-        $this->newLine();
-    }
-
-    private function loadCodeSnippet(string $filename, int $line, OutputColorEnum $outputColorEnum): void
-    {
-        $lineStart = $line - self::SNIPPED_LINE;
-        $lineEnd = $line + (self::SNIPPED_LINE - 1);
-
-        if (! file_exists($filename)) {
-            return;
-        }
-
-        $content = file_get_contents($filename);
-        if ($content === false) {
-            return;
-        }
-
-        $contentArray = explode("\n", $content);
-
-        $lineCnt = 0;
-        foreach ($contentArray as $contentLine) {
-            if ($lineCnt >= $lineStart && $lineCnt < $lineEnd) {
-                $lineNumber = $lineCnt + 1;
-                $tmp = str_pad((string) $lineNumber, self::LINE_LENGTH, '0', STR_PAD_LEFT);
-                $lineNumberPrefix = substr($tmp, 0, self::LINE_LENGTH - strlen((string) $lineNumber));
-
-                if ($lineCnt + 1 === $line) {
-                    $result = sprintf(
-                        '<fg=%s>%s</><fg=%s;options=bold>%s</><fg=gray>|</> <fg=%s>%s</>',
-                        $outputColorEnum->getBrightValue(),
-                        $lineNumberPrefix,
-                        $outputColorEnum->value,
-                        $lineNumber,
-                        $outputColorEnum->value,
-                        $contentLine,
-                    );
-                } else {
-                    $result = sprintf(
-                        '<fg=gray>%s</><fg=white;options=bold>%s</><fg=gray>|</> <fg=white>%s</>',
-                        $lineNumberPrefix,
-                        $lineNumber,
-                        $contentLine,
-                    );
-                }
-
-                $this->writeln($result);
-            }
-
-            ++$lineCnt;
-        }
-    }
+    // public function generateStructron(string $value): void
+    // {
+    //     $outputColorEnum = OutputColorEnum::BLUE;
+    //     ++$this->countFiles;
+    //
+    //     // $line01 = sprintf(
+    //     //     '<fg=white;options=bold>#%d - line %s </><fg=%s;options=bold>[%s]</>',
+    //     //     $this->countFiles,
+    //     //     $value,
+    //     //     $outputColorEnum->value,
+    //     //     'as',
+    //     // );
+    //     $line01 = sprintf(
+    //         '<fg=%s;options=bold>#%d - file: %s </><fg=%s;options=bold>[%s]</>',
+    //         $outputColorEnum->getBrightValue(),
+    //         $this->countFiles,
+    //         $value,
+    //         $outputColorEnum->value,
+    //         'as',
+    //     );
+    //
+    //     $this->newLine();
+    //     $this->writeln($line01);
+    //     $this->newLine();
+    // }
 }

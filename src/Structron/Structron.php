@@ -8,16 +8,18 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use Wundii\DataMapper\Exception\DataMapperException;
-use Wundii\DataMapper\Resolver\ReflectionObjectResolver;
 use Wundii\Structron\Config\OptionEnum;
 use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Output\StructronSymfonyStyle;
+use Wundii\Structron\Dto\ReflectionDto;
+use Wundii\Structron\Dto\StructronCollectionDto;
 use Wundii\Structron\Finder\StructronFinder;
+use Wundii\Structron\Resolver\StructronCollectionResolver;
 
 final class Structron
 {
     /**
-     * @var array<string, string>
+     * @var array<string, ReflectionDto>
      */
     public array $declaredClasses = [];
 
@@ -31,6 +33,7 @@ final class Structron
     /**
      * @throws ReflectionException
      * @throws DataMapperException
+     * @throws Exception
      */
     public function run(): void
     {
@@ -40,7 +43,6 @@ final class Structron
 
         $test = $this->structronConfig->getParameter(OptionEnum::TEST);
         $this->structronConfig->setParameter(OptionEnum::TEST, $test);
-        $reflectionObjectResolver = new ReflectionObjectResolver();
 
         /**
          * Load all files from the structronFinder.
@@ -59,26 +61,32 @@ final class Structron
             }
 
             $realpath = (string) realpath($ref->getFileName());
-            $name = $ref->getName();
-            $this->declaredClasses[$realpath] = $name;
+            $this->declaredClasses[$realpath] = new ReflectionDto(
+                $realpath,
+                $ref->getName(),
+                $ref->getShortName(),
+            );
         }
 
+        /**
+         * Iterate through all files and resolve the attributes.
+         */
         foreach ($this->structronFinder->files() as $structronFinder) {
             $pathname = $structronFinder->getPathname();
-
             if (! array_key_exists($pathname, $this->declaredClasses)) {
                 throw new Exception(sprintf('File %s does not exist', $pathname));
             }
 
-            $className = $this->declaredClasses[$pathname];
+            $structronCollectionResolver = new StructronCollectionResolver();
+            $structronCollectionDto = $structronCollectionResolver->resolve(
+                $this->declaredClasses[$pathname],
+            );
 
-            dump($reflectionObjectResolver->resolve($className));
+            if (! $structronCollectionDto instanceof StructronCollectionDto) {
+                continue;
+            }
 
-            // $this->structronSymfonyStyle->generateStructron(
-            //     $structronFinder->getPathname(),
-            // );
-            //
-            // $this->structronSymfonyStyle->progressBarAdvance();
+            $this->structronSymfonyStyle->progressBarAdvance();
         }
 
         $this->structronSymfonyStyle->progressBarFinish();

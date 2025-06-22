@@ -28,6 +28,7 @@ return static function (ContainerConfigurator $container) {
             __DIR__ . '/../src/Cache/',
             __DIR__ . '/../src/Config/',
             __DIR__ . '/../src/DependencyInjection/',
+            __DIR__ . '/../src/Dto/',
             __DIR__ . '/../src/Process',
         ]);
 
