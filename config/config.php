@@ -23,6 +23,7 @@ return static function (ContainerConfigurator $container) {
         ->public()
         ->autowire()
         ->exclude([
+            __DIR__ . '/../src/Attribute/',
             __DIR__ . '/../src/Bootstrap/',
             __DIR__ . '/../src/Cache/',
             __DIR__ . '/../src/Config/',

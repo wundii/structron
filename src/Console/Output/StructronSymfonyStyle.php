@@ -129,6 +129,32 @@ final class StructronSymfonyStyle extends SymfonyStyle
         $this->isSuccess = false;
     }
 
+    public function generateStructron(string $value): void
+    {
+        $outputColorEnum = OutputColorEnum::BLUE;
+        ++$this->countFiles;
+
+        // $line01 = sprintf(
+        //     '<fg=white;options=bold>#%d - line %s </><fg=%s;options=bold>[%s]</>',
+        //     $this->countFiles,
+        //     $value,
+        //     $outputColorEnum->value,
+        //     'as',
+        // );
+        $line01 = sprintf(
+            '<fg=%s;options=bold>#%d - file: %s </><fg=%s;options=bold>[%s]</>',
+            $outputColorEnum->getBrightValue(),
+            $this->countFiles,
+            $value,
+            $outputColorEnum->value,
+            'as',
+        );
+
+        $this->newLine();
+        $this->writeln($line01);
+        $this->newLine();
+    }
+
     private function loadCodeSnippet(string $filename, int $line, OutputColorEnum $outputColorEnum): void
     {
         $lineStart = $line - self::SNIPPED_LINE;
