@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace E2E\Console;
+namespace Wundii\Structron\Tests\E2E\Console;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\StreamOutput;

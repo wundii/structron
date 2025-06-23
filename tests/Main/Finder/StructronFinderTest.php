@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Main\Finder;
+namespace Wundii\Structron\Tests\Main\Finder;
 
 use Iterator;
 use PHPUnit\Framework\TestCase;

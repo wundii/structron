@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Init\Bootstrap;
+namespace Wundii\Structron\Tests\Init\Bootstrap;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArgvInput;

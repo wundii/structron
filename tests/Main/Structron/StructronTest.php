@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Main\Structron;
+namespace Wundii\Structron\Tests\Main\Structron;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArgvInput;

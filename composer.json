@@ -48,6 +48,11 @@
       "Wundii\\Structron\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Wundii\\Structron\\Tests\\": "tests/"
+    }
+  },
   "scripts": {
     "auto-scripts": {
     },

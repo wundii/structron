@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Main\Resolver\Config;
+namespace Wundii\Structron\Tests\Main\Resolver\Config;
 
 use PHPUnit\Framework\TestCase;
 use Wundii\Structron\Config\StructronConfig;

@@ -16,7 +16,7 @@ use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Finder\StructronFinder;
 use Wundii\Structron\Structron\Structron;
 
-final class StructronCommand extends Command
+class StructronCommand extends Command
 {
     public function __construct(
         private readonly StructronConfig $structronConfig,

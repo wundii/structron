@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Main\Console;
+namespace Wundii\Structron\Tests\Main\Console;
 
 use Exception;
 use PHPUnit\Framework\TestCase;

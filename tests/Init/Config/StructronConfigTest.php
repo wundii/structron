@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Init\Config;
+namespace Wundii\Structron\Tests\Init\Config;
 
 use PHPUnit\Framework\TestCase;
 use Wundii\Structron\Config\OptionEnum;

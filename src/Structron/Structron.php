@@ -89,6 +89,8 @@ final class Structron
                 continue;
             }
 
+            dd($structronCollectionDto);
+
             $structronDocsResolver = new StructronDocsResolver($this->structronConfig);
             $structronDocsResolver->resolve($structronCollectionDto);
         }

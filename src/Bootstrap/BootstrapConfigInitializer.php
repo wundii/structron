@@ -8,11 +8,11 @@ use Exception;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
-final class BootstrapConfigInitializer
+readonly class BootstrapConfigInitializer
 {
     public function __construct(
-        private readonly Filesystem $filesystem,
-        private readonly SymfonyStyle $symfonyStyle,
+        private Filesystem $filesystem,
+        private SymfonyStyle $symfonyStyle,
     ) {
     }
 

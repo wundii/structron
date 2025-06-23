@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Wundii\Structron\Bootstrap\BootstrapConfigInitializer;
 
-final class StructronInitCommand extends Command
+class StructronInitCommand extends Command
 {
     public function __construct(
         private readonly BootstrapConfigInitializer $bootstrapConfigInitializer

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Main\DependencyInjection;
+namespace Wundii\Structron\Tests\Main\DependencyInjection;
 
 use Exception;
 use PHPUnit\Framework\TestCase;

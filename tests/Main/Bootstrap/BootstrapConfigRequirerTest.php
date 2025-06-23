@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Main\Bootstrap;
+namespace Wundii\Structron\Tests\Main\Bootstrap;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
