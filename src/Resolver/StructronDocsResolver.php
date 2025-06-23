@@ -84,6 +84,7 @@ final readonly class StructronDocsResolver
                 $fileContent .= '| FullObjectName | Object |' . PHP_EOL;
                 $fileContent .= '| -------------- | ------ |' . PHP_EOL;
 
+                ksort($classGlossary);
                 foreach ($classGlossary as $classFullName => $className) {
                     $fileContent .= '| ' . $classFullName . ' | ' . $className . ' |' . PHP_EOL;
                 }
