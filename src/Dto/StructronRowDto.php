@@ -29,7 +29,29 @@ final readonly class StructronRowDto
 
     public function getType(): string
     {
-        return (string) $this->type;
+        $implodeType = explode('\\', (string) $this->type);
+
+        return array_pop($implodeType);
+    }
+
+    public function getTypeRaw(): string
+    {
+        return str_replace('[]', '', $this->getType());
+    }
+
+    public function getTypeRawIfClass(): ?string
+    {
+        if ($this->type === null) {
+            return null;
+        }
+
+        $implodeType = explode('\\', $this->type);
+
+        if (count($implodeType) === 1) {
+            return null;
+        }
+
+        return str_replace('[]', '', $this->type);
     }
 
     public function getDefault(): int|float|string

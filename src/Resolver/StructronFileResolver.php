@@ -51,7 +51,7 @@ final class StructronFileResolver
         int $prefixLevel = 0,
     ): iterable {
         if ($prefix) {
-            ++ $prefixLevel;
+            ++$prefixLevel;
         }
 
         if (is_string($object)) {
@@ -95,12 +95,11 @@ final class StructronFileResolver
                 }
             }
 
-            if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
-                if (is_object($defaultValue)) {
-                    $reflection = new ReflectionClass($defaultValue);
-                    if ($reflection->isEnum()) {
-                        $defaultValue = $reflection->getShortName() . '::' . $defaultValue->name;
-                    }
+            if (($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) && is_object($defaultValue)) {
+                $reflection = new ReflectionClass($defaultValue);
+                if ($reflection->isEnum()) {
+                    /** @phpstan-ignore-next-line */
+                    $defaultValue = $reflection->getShortName() . '::' . $defaultValue->name;
                 }
             }
 
@@ -124,7 +123,7 @@ final class StructronFileResolver
             if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
                 /** @var class-string $targetType */
                 $reflection = new ReflectionClass($targetType);
-                if (! $reflection->isInternal() && !$reflection->isEnum()) {
+                if (! $reflection->isInternal() && ! $reflection->isEnum()) {
                     yield new StructronRowDto(
                         StructronRowTypEnum::SUBHEADER,
                         $outputName,

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-use Wundii\Structron\Config\StructronConfig;
+use Wundii\PHPLint\Config\LintConfig;
 
-return static function (StructronConfig $structronConfig): void {
-    $structronConfig->paths([
+return static function (LintConfig $lintConfig): void {
+    $lintConfig->cacheDirectory('./cache/phplint');
+    $lintConfig->paths([
         'src',
         'tests',
     ]);

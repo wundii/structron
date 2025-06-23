@@ -25,7 +25,8 @@ final readonly class StructronDocsResolver
         $dtoPaths = $this->structronConfig->getArrayWithStrings(OptionEnum::PATHS);
         $phpExtension = $this->structronConfig->getString(OptionEnum::PHP_EXTENSION);
         $directoryPath = getcwd() . DIRECTORY_SEPARATOR . $docPath;
-        $markdownStructronFile = $directoryPath . DIRECTORY_SEPARATOR . '/_Structron.md';
+        $markdownStructronFile = $directoryPath . DIRECTORY_SEPARATOR . '_Structron.md';
+        $projectStructronFilePath = str_replace($directoryPath, '', $markdownStructronFile);
 
         if (! $this->filesystem->exists($directoryPath)) {
             $this->filesystem->mkdir($directoryPath, 0755);
@@ -40,11 +41,17 @@ final readonly class StructronDocsResolver
         foreach ($structronCollectionDto->getStructronFileDtos() as $structronFileDto) {
             $basename = basename($structronFileDto->getPathname());
             $nativeName = str_replace('.' . $phpExtension, '', $basename);
+            $projectFilePath = str_replace((string) getcwd(), '', $structronFileDto->getPathname());
 
             $folder = str_replace($dtoPaths, [''], $structronFileDto->getPathname());
             $folder = str_replace(getcwd() . DIRECTORY_SEPARATOR, '', $folder);
             $folder = str_replace($basename, '', $folder);
             $folder = substr($folder, 1);
+
+            $folderCount = substr_count($folder, DIRECTORY_SEPARATOR);
+
+            $structronReturnPath = '.' . str_repeat('/..', $folderCount);
+            $fileReturnPath = '.' . str_repeat('/..', $folderCount + 1);
 
             $directoryPathDocs = getcwd() . DIRECTORY_SEPARATOR . $docPath . DIRECTORY_SEPARATOR . $folder;
             if (! $this->filesystem->exists($directoryPathDocs)) {
@@ -52,8 +59,13 @@ final readonly class StructronDocsResolver
             }
 
             $columnsMaxLength = new ColumnsMaxLength();
+            $classGlossary = [];
 
             foreach ($structronFileDto->getCollection() as $structronRowDto) {
+                if ($structronRowDto->getTypeRawIfClass()) {
+                    $classGlossary[$structronRowDto->getTypeRawIfClass()] = $structronRowDto->getTypeRaw();
+                }
+
                 $columnsMaxLength->name = max($columnsMaxLength->name, strlen($structronRowDto->getName()));
                 $columnsMaxLength->type = max($columnsMaxLength->type, strlen($structronRowDto->getType()));
                 $columnsMaxLength->default = max($columnsMaxLength->default, strlen((string) $structronRowDto->getDefault()));
@@ -61,11 +73,25 @@ final readonly class StructronDocsResolver
             }
 
             $fileContent = '# ' . $structronFileDto->getClassname() . PHP_EOL;
-            $fileContent .= '- [Back to Structron Documentation](' . $markdownStructronFile . ')' . PHP_EOL;
-            $fileContent .= '- [Go to ' . $basename . '](' . $structronFileDto->getPathname() . ')' . PHP_EOL . PHP_EOL;
+            $fileContent .= '- [Back to Structron Documentation](' . $structronReturnPath . $projectStructronFilePath . ')' . PHP_EOL;
+            $fileContent .= '- [Go to ' . $basename . '](' . $fileReturnPath . $projectFilePath . ')' . PHP_EOL . PHP_EOL;
             foreach ($structronFileDto->getDescriptions() as $description) {
                 $fileContent .= $description . PHP_EOL . PHP_EOL;
             }
+
+            if ($classGlossary !== []) {
+                $fileContent .= '## Class glossary' . PHP_EOL;
+                $fileContent .= '| FullObjectName | Object |' . PHP_EOL;
+                $fileContent .= '| -------------- | ------ |' . PHP_EOL;
+
+                foreach ($classGlossary as $classFullName => $className) {
+                    $fileContent .= '| ' . $classFullName . ' | ' . $className . ' |' . PHP_EOL;
+                }
+
+                $fileContent .= PHP_EOL;
+            }
+
+            $fileContent .= '## Properties' . PHP_EOL;
 
             foreach ($structronFileDto->getCollection() as $structronRowDto) {
                 if ($structronRowDto->getStructronRowTypEnum() === StructronRowTypEnum::HEADER) {
