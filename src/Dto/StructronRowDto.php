@@ -69,6 +69,12 @@ final readonly class StructronRowDto
 
     public function getDescription(): string
     {
-        return (string) preg_replace("/\r\n|\r|\n/", '', (string) $this->description);
+        return $this->cleanUp((string) $this->description);
+    }
+
+    public function cleanUp(string $string): string
+    {
+        $string = (string) preg_replace("/\r\n|\r|\n/", '', $string);
+        return (string) preg_replace('/\s+/', ' ', $string);
     }
 }
