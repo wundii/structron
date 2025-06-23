@@ -7,4 +7,5 @@ use Wundii\Structron\Config\StructronConfig;
 return static function (StructronConfig $structronConfig): void {
     $structronConfig->docPath('structron-docs');
     $structronConfig->paths(['dto']);
+    $structronConfig->setIndentFileIteration();
 };

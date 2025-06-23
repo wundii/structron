@@ -14,6 +14,7 @@ final class StructronConfig extends StructronConfigParameter
         $this->setParameter(OptionEnum::NO_PROGRESS_BAR, false);
         $this->setParameter(OptionEnum::PHP_EXTENSION, 'php');
         $this->setParameter(OptionEnum::DOC_PATH, 'structron-docs');
+        $this->setParameter(OptionEnum::INDENT_FILE_ITERATION, false);
     }
 
     public function disableExitCode(): void
@@ -56,5 +57,10 @@ final class StructronConfig extends StructronConfigParameter
         Assert::allString($skip);
 
         $this->setParameter(OptionEnum::SKIP, $skip);
+    }
+
+    public function setIndentFileIteration(): void
+    {
+        $this->setParameter(OptionEnum::INDENT_FILE_ITERATION, true);
     }
 }

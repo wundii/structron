@@ -37,6 +37,11 @@ enum OptionEnum: string
     case DOC_PATH = 'doc-path';
 
     /**
+     * @internal
+     */
+    case INDENT_FILE_ITERATION = 'indent-file-iteration';
+
+    /**
      * @internal only for unit tests
      */
     case TEST = 'test';

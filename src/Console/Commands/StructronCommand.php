@@ -53,6 +53,7 @@ class StructronCommand extends Command
             $structronFinder,
             $this->structronFileResolver,
             $this->structronDocsResolver,
+            $this->structronConfig,
         );
         $structron->run();
 

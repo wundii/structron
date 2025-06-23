@@ -20,6 +20,8 @@ use Wundii\DataMapper\Resolver\ReflectionObjectResolver;
 use Wundii\Structron\Attribute\Approach;
 use Wundii\Structron\Attribute\Description;
 use Wundii\Structron\Attribute\Structron;
+use Wundii\Structron\Config\OptionEnum;
+use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Dto\ReflectionDto;
 use Wundii\Structron\Dto\StructronFileDto;
 use Wundii\Structron\Dto\StructronRowDto;
@@ -44,6 +46,7 @@ final class StructronFileResolver
      * @throws DataMapperException|ReflectionException
      *      */
     public function objectDto(
+        StructronConfig $structronConfig,
         DataConfigInterface $dataConfig,
         ObjectPropertyDto $objectPropertyDto,
         null|string $object,
@@ -117,7 +120,11 @@ final class StructronFileResolver
 
             $outputName = $name;
             if ($prefix) {
-                $outputName = str_repeat('&nbsp; ', $prefixLevel) . $prefix . '.' . $name;
+                $outputName = $prefix . '.' . $name;
+
+                if ($structronConfig->getBoolean(OptionEnum::INDENT_FILE_ITERATION)) {
+                    $outputName = str_repeat('&nbsp; ', $prefixLevel) . $outputName;
+                }
             }
 
             if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
@@ -134,7 +141,14 @@ final class StructronFileResolver
 
                     $targetType = $dataConfig->mapClassName((string) $targetType);
 
-                    foreach ($this->objectDto($dataConfig, $this->getObjectPropertyDto($targetType), $targetType, $name, $prefixLevel) as $row) {
+                    foreach ($this->objectDto(
+                        $structronConfig,
+                        $dataConfig,
+                        $this->getObjectPropertyDto($targetType),
+                        $targetType,
+                        $name,
+                        $prefixLevel,
+                    ) as $row) {
                         yield $row;
                     }
 
@@ -206,8 +220,10 @@ final class StructronFileResolver
      * @throws ReflectionException
      * @throws DataMapperException
      */
-    public function resolve(ReflectionDto $reflectionDto): ?StructronFileDto
-    {
+    public function resolve(
+        StructronConfig $structronConfig,
+        ReflectionDto $reflectionDto,
+    ): ?StructronFileDto {
         $objectPropertyDto = $this->getObjectPropertyDto($reflectionDto->getClassName());
 
         if (! array_filter(
@@ -256,7 +272,7 @@ final class StructronFileResolver
             ),
         ];
 
-        foreach ($this->objectDto($dataConfig, $objectPropertyDto, $reflectionDto->getClassName()) as $row) {
+        foreach ($this->objectDto($structronConfig, $dataConfig, $objectPropertyDto, $reflectionDto->getClassName()) as $row) {
             $structronRowDto[] = $row;
         }
 

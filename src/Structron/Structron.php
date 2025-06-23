@@ -8,6 +8,7 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use Wundii\DataMapper\Exception\DataMapperException;
+use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Output\StructronSymfonyStyle;
 use Wundii\Structron\Dto\ReflectionDto;
 use Wundii\Structron\Dto\StructronCollectionDto;
@@ -28,6 +29,7 @@ final class Structron
         private readonly StructronFinder $structronFinder,
         private readonly StructronFileResolver $structronFileResolver,
         private readonly StructronDocsResolver $structronDocsResolver,
+        private readonly StructronConfig $structronConfig,
     ) {
     }
 
@@ -85,6 +87,7 @@ final class Structron
             $this->structronSymfonyStyle->progressBarAdvance();
 
             $structronFileDto = $this->structronFileResolver->resolve(
+                $this->structronConfig,
                 $this->declaredClasses[$pathname],
             );
 
