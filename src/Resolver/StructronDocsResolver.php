@@ -100,7 +100,7 @@ final readonly class StructronDocsResolver
         }
 
         file_put_contents($markdownStructronFile, $structronFileContent);
-        $this->filesystem->chmod($markdownFile, 0755);
+        $this->filesystem->chmod($markdownStructronFile, 0755);
 
         return true;
     }
