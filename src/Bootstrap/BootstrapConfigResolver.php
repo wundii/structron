@@ -24,13 +24,6 @@ final class BootstrapConfigResolver
         return new BootstrapConfig($configFile);
     }
 
-    public function isConfigFileExists(): bool
-    {
-        $configFile = $this->resolveFromInput();
-
-        return $configFile !== null;
-    }
-
     private function resolveFromInput(): ?string
     {
         $configFile = $this->bootstrapInputResolver->getOptionValue(OptionEnum::CONFIG);

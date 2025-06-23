@@ -12,7 +12,7 @@ use Wundii\Structron\Config\OptionEnum;
 use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\OutputColorEnum;
 
-final class StructronSymfonyStyle extends SymfonyStyle
+class StructronSymfonyStyle extends SymfonyStyle
 {
     private bool $isSuccess = true;
 
@@ -81,6 +81,11 @@ final class StructronSymfonyStyle extends SymfonyStyle
         }
 
         $this->progressFinish();
+    }
+
+    public function setError(): void
+    {
+        $this->isSuccess = false;
     }
 
     // public function generateStructron(string $value): void

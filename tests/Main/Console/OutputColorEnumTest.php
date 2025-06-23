@@ -44,6 +44,7 @@ class OutputColorEnumTest extends TestCase
                 $this->assertStringNotContainsString('bright-', $outputColorEnum->value);
             } else {
                 $this->assertStringContainsString('bright-', $outputColorEnum->value);
+                $this->assertSame($outputColorEnum->getBrightValue(), $outputColorEnum->value);
             }
         }
     }
