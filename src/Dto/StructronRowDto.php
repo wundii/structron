@@ -12,7 +12,7 @@ final readonly class StructronRowDto
         private StructronRowTypEnum $structronRowTypEnum,
         private string $name,
         private ?string $type = null,
-        private ?string $default = null,
+        private null|bool|int|float|string $default = null,
         private ?string $description = null,
     ) {
     }
@@ -32,10 +32,14 @@ final readonly class StructronRowDto
         return (string) $this->type;
     }
 
-    public function getDefault(): string
+    public function getDefault(): int|float|string
     {
         if ($this->default === null) {
             return 'null';
+        }
+
+        if (is_bool($this->default)) {
+            return $this->default ? 'true' : 'false';
         }
 
         return $this->default;

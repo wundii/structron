@@ -48,7 +48,12 @@ final class StructronFileResolver
         ObjectPropertyDto $objectPropertyDto,
         null|string $object,
         null|string $prefix = null,
+        int $prefixLevel = 0,
     ): iterable {
+        if ($prefix) {
+            ++ $prefixLevel;
+        }
+
         if (is_string($object)) {
             $object = $dataConfig->mapClassName($object);
         }
@@ -90,6 +95,15 @@ final class StructronFileResolver
                 }
             }
 
+            if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
+                if (is_object($defaultValue)) {
+                    $reflection = new ReflectionClass($defaultValue);
+                    if ($reflection->isEnum()) {
+                        $defaultValue = $reflection->getShortName() . '::' . $defaultValue->name;
+                    }
+                }
+            }
+
             if (
                 ! is_bool($defaultValue)
                 && ! is_int($defaultValue)
@@ -97,21 +111,20 @@ final class StructronFileResolver
                 && ! is_string($defaultValue)
                 && $defaultValue !== null
             ) {
-                throw new Exception(sprintf('Property %s has an invalid default value type %s, string is required', $name, gettype($defaultValue)));
+                throw new Exception(sprintf('Property %s has an invalid default value type %s, required is null/bool/int/float/string', $name, gettype($defaultValue)));
             }
 
             $defaultValue = is_bool($defaultValue) ? ($defaultValue ? 'true' : 'false') : $defaultValue;
-            $defaultValue = (string) $defaultValue;
 
             $outputName = $name;
             if ($prefix) {
-                $outputName = $prefix . '.' . $name;
+                $outputName = str_repeat('&nbsp; ', $prefixLevel) . $prefix . '.' . $name;
             }
 
             if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
                 /** @var class-string $targetType */
                 $reflection = new ReflectionClass($targetType);
-                if (! $reflection->isInternal()) {
+                if (! $reflection->isInternal() && !$reflection->isEnum()) {
                     yield new StructronRowDto(
                         StructronRowTypEnum::SUBHEADER,
                         $outputName,
@@ -122,12 +135,14 @@ final class StructronFileResolver
 
                     $targetType = $dataConfig->mapClassName((string) $targetType);
 
-                    foreach ($this->objectDto($dataConfig, $this->getObjectPropertyDto($targetType), $targetType, $name) as $row) {
+                    foreach ($this->objectDto($dataConfig, $this->getObjectPropertyDto($targetType), $targetType, $name, $prefixLevel) as $row) {
                         yield $row;
                     }
 
                     continue;
                 }
+
+                $dataType = $targetType;
             }
 
             yield new StructronRowDto(
