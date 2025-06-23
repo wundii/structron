@@ -61,6 +61,7 @@ final class StructronFinder extends Finder
         $finder->files();
         $finder->name('*.' . $extension);
         $finder->in($path);
+        $finder->sortByName();
 
         foreach ($excludes as $exclude) {
             if (! str_starts_with($exclude, $path)) {

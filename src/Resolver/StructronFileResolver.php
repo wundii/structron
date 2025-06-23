@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wundii\Structron\Resolver;
 
 use Exception;
+use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Wundii\DataMapper\DataConfig;
@@ -89,9 +90,18 @@ final class StructronFileResolver
                 }
             }
 
-            if (! is_string($defaultValue) && $defaultValue !== null) {
+            if (
+                ! is_bool($defaultValue)
+                && ! is_int($defaultValue)
+                && ! is_float($defaultValue)
+                && ! is_string($defaultValue)
+                && $defaultValue !== null
+            ) {
                 throw new Exception(sprintf('Property %s has an invalid default value type %s, string is required', $name, gettype($defaultValue)));
             }
+
+            $defaultValue = is_bool($defaultValue) ? ($defaultValue ? 'true' : 'false') : $defaultValue;
+            $defaultValue = (string) $defaultValue;
 
             $outputName = $name;
             if ($prefix) {
@@ -99,19 +109,24 @@ final class StructronFileResolver
             }
 
             if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
-                yield new StructronRowDto(
-                    StructronRowTypEnum::SUBHEADER,
-                    $outputName,
-                    $dataType === DataTypeEnum::ARRAY ? $targetType . '[]' : $targetType,
-                    $propertyDto->isDefaultValueAvailable() ? $defaultValue : 'required',
-                    $description,
-                );
+                $reflection = new ReflectionClass($targetType);
+                if (! $reflection->isInternal()) {
+                    yield new StructronRowDto(
+                        StructronRowTypEnum::SUBHEADER,
+                        $outputName,
+                        $dataType === DataTypeEnum::ARRAY ? $targetType . '[]' : $targetType,
+                        $propertyDto->isDefaultValueAvailable() ? $defaultValue : 'required',
+                        $description,
+                    );
 
-                foreach ($this->objectDto($dataConfig, $this->getObjectPropertyDto((string) $targetType), $targetType, $name) as $row) {
-                    yield $row;
+                    $targetType = $dataConfig->mapClassName((string) $targetType);
+
+                    foreach ($this->objectDto($dataConfig, $this->getObjectPropertyDto($targetType), $targetType, $name) as $row) {
+                        yield $row;
+                    }
+
+                    continue;
                 }
-
-                continue;
             }
 
             yield new StructronRowDto(
@@ -160,12 +175,8 @@ final class StructronFileResolver
      * @throws ReflectionException
      * @throws DataMapperException
      */
-    public function getObjectPropertyDto(object|string $className): ObjectPropertyDto
+    public function getObjectPropertyDto(string $className): ObjectPropertyDto
     {
-        if (is_object($className)) {
-            $className = get_class($className);
-        }
-
         if (array_key_exists($className, $this->objectPropertyDtos)) {
             $objectPropertyDto = $this->objectPropertyDtos[$className];
         } else {

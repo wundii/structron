@@ -61,8 +61,8 @@ final readonly class StructronDocsResolver
             }
 
             $fileContent = '# ' . $structronFileDto->getClassname() . PHP_EOL;
-            $fileContent .= '[Back to Structron Documentation](' . $markdownStructronFile . ')' . PHP_EOL . PHP_EOL;
-            $fileContent .= '> ' . basename($structronFileDto->getPathname()) . PHP_EOL . PHP_EOL;
+            $fileContent .= '- [Back to Structron Documentation](' . $markdownStructronFile . ')' . PHP_EOL;
+            $fileContent .= '- [Go to ' . $basename . '](' . $structronFileDto->getPathname() . ')' . PHP_EOL . PHP_EOL;
             foreach ($structronFileDto->getDescriptions() as $description) {
                 $fileContent .= $description . PHP_EOL . PHP_EOL;
             }
