@@ -20,11 +20,11 @@ use Wundii\Structron\Attribute\Approach;
 use Wundii\Structron\Attribute\Description;
 use Wundii\Structron\Attribute\Structron;
 use Wundii\Structron\Dto\ReflectionDto;
-use Wundii\Structron\Dto\StructronCollectionDto;
+use Wundii\Structron\Dto\StructronFileDto;
 use Wundii\Structron\Dto\StructronRowDto;
 use Wundii\Structron\Enum\StructronRowTypEnum;
 
-class StructronCollectionResolver
+final class StructronFileResolver
 {
     private ReflectionObjectResolver $reflectionObjectResolver;
 
@@ -55,7 +55,6 @@ class StructronCollectionResolver
         $targetObjectDto = $this->getObjectPropertyDto($object ?: '');
 
         foreach ($objectPropertyDto->getConstructor() as $propertyDto) {
-
             $propertyDto = $targetObjectDto->findPropertyDto($dataConfig->getApproach(), $propertyDto->getName());
             if (! $propertyDto instanceof PropertyDto) {
                 continue;
@@ -181,7 +180,7 @@ class StructronCollectionResolver
      * @throws ReflectionException
      * @throws DataMapperException
      */
-    public function resolve(ReflectionDto $reflectionDto): ?StructronCollectionDto
+    public function resolve(ReflectionDto $reflectionDto): ?StructronFileDto
     {
         $objectPropertyDto = $this->getObjectPropertyDto($reflectionDto->getClassName());
 
@@ -235,7 +234,7 @@ class StructronCollectionResolver
             $structronRowDto[] = $row;
         }
 
-        return new StructronCollectionDto(
+        return new StructronFileDto(
             $approachEnum,
             $reflectionDto->getPathname(),
             $reflectionDto->getClassName(),

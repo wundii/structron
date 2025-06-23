@@ -21,6 +21,8 @@ use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Finder\StructronFinder;
 use Wundii\Structron\Resolver\Config\StructronPathsResolver;
 use Wundii\Structron\Resolver\Config\StructronSkipPathsResolver;
+use Wundii\Structron\Resolver\StructronDocsResolver;
+use Wundii\Structron\Resolver\StructronFileResolver;
 
 class StructronApplicationTest extends TestCase
 {
@@ -36,6 +38,8 @@ class StructronApplicationTest extends TestCase
         $consoleOutput = new StreamOutput(fopen('php://memory', 'w', false));
         $structronConsoleOutput = new StructronSymfonyStyle($structronConfig, $consoleInput, $consoleOutput);
         $bootstrapConfigInitializer = new BootstrapConfigInitializer(new Filesystem(), $structronConsoleOutput);
+        $structronFileResolver = new StructronFileResolver();
+        $structronDocsResolver = new StructronDocsResolver($structronConfig, new Filesystem());
         $structronConfig->paths(['src']);
         $structronFinder = new StructronFinder(
             new StructronSkipPathsResolver(),
@@ -43,7 +47,9 @@ class StructronApplicationTest extends TestCase
         );
         $structronCommand = new StructronCommand(
             $structronConfig,
-            $structronFinder
+            $structronFinder,
+            $structronFileResolver,
+            $structronDocsResolver,
         );
         $structronInitCommand = new StructronInitCommand($bootstrapConfigInitializer);
 

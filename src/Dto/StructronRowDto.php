@@ -27,18 +27,22 @@ final readonly class StructronRowDto
         return $this->name;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
-        return $this->type;
+        return (string) $this->type;
     }
 
-    public function getDefault(): ?string
+    public function getDefault(): string
     {
+        if ($this->default === null) {
+            return 'null';
+        }
+
         return $this->default;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
-        return $this->description;
+        return (string) $this->description;
     }
 }

@@ -8,14 +8,13 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use Wundii\DataMapper\Exception\DataMapperException;
-use Wundii\Structron\Config\OptionEnum;
-use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Output\StructronSymfonyStyle;
 use Wundii\Structron\Dto\ReflectionDto;
 use Wundii\Structron\Dto\StructronCollectionDto;
+use Wundii\Structron\Dto\StructronFileDto;
 use Wundii\Structron\Finder\StructronFinder;
-use Wundii\Structron\Resolver\StructronCollectionResolver;
 use Wundii\Structron\Resolver\StructronDocsResolver;
+use Wundii\Structron\Resolver\StructronFileResolver;
 
 final class Structron
 {
@@ -26,8 +25,9 @@ final class Structron
 
     public function __construct(
         private readonly StructronSymfonyStyle $structronSymfonyStyle,
-        private readonly StructronConfig $structronConfig,
         private readonly StructronFinder $structronFinder,
+        private readonly StructronFileResolver $structronFileResolver,
+        private readonly StructronDocsResolver $structronDocsResolver,
     ) {
     }
 
@@ -42,14 +42,17 @@ final class Structron
 
         $this->structronSymfonyStyle->progressBarStart($count);
 
-        $test = $this->structronConfig->getParameter(OptionEnum::TEST);
-        $this->structronConfig->setParameter(OptionEnum::TEST, $test);
+        $includedFiles = get_included_files();
 
         /**
          * Load all files from the structronFinder.
          */
         foreach ($this->structronFinder->files() as $structronFinder) {
-            require_once $structronFinder->getPathname();
+            $filePath = $structronFinder->getRealPath();
+
+            if (!in_array($filePath, $includedFiles)) {
+                require_once $filePath;
+            }
         }
 
         /**
@@ -72,6 +75,7 @@ final class Structron
         /**
          * Iterate through all files and resolve the attributes.
          */
+        $structronFileDtos = [];
         foreach ($this->structronFinder->files() as $structronFinder) {
             $pathname = $structronFinder->getPathname();
             if (! array_key_exists($pathname, $this->declaredClasses)) {
@@ -80,20 +84,20 @@ final class Structron
 
             $this->structronSymfonyStyle->progressBarAdvance();
 
-            $structronCollectionResolver = new StructronCollectionResolver();
-            $structronCollectionDto = $structronCollectionResolver->resolve(
+            $structronFileDto = $this->structronFileResolver->resolve(
                 $this->declaredClasses[$pathname],
             );
 
-            if (! $structronCollectionDto instanceof StructronCollectionDto) {
+            if (! $structronFileDto instanceof StructronFileDto) {
                 continue;
             }
 
-            // dd($structronCollectionDto);
-
-            $structronDocsResolver = new StructronDocsResolver($this->structronConfig);
-            $structronDocsResolver->resolve($structronCollectionDto);
+            $structronFileDtos[] = $structronFileDto;
         }
+
+        $structronCollectionDto = new StructronCollectionDto($structronFileDtos);
+
+        $this->structronDocsResolver->resolve($structronCollectionDto);
 
         $this->structronSymfonyStyle->progressBarFinish();
         // $this->processResultToConsole($processResult);

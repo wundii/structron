@@ -7,12 +7,15 @@ namespace Wundii\Structron\Tests\E2E\Console;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Commands\StructronCommand;
 use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Finder\StructronFinder;
 use Wundii\Structron\Resolver\Config\StructronPathsResolver;
 use Wundii\Structron\Resolver\Config\StructronSkipPathsResolver;
+use Wundii\Structron\Resolver\StructronDocsResolver;
+use Wundii\Structron\Resolver\StructronFileResolver;
 
 class StructronCommandTest extends TestCase
 {
@@ -28,6 +31,8 @@ class StructronCommandTest extends TestCase
                 new StructronSkipPathsResolver(),
                 new StructronPathsResolver(),
             ),
+            new StructronFileResolver(),
+            new StructronDocsResolver($structronConfig, new Filesystem()),
         );
 
         return new CommandTester($structronCommand);

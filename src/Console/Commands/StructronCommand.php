@@ -14,6 +14,8 @@ use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Console\Output\StructronSymfonyStyle;
 use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\Finder\StructronFinder;
+use Wundii\Structron\Resolver\StructronDocsResolver;
+use Wundii\Structron\Resolver\StructronFileResolver;
 use Wundii\Structron\Structron\Structron;
 
 class StructronCommand extends Command
@@ -21,6 +23,8 @@ class StructronCommand extends Command
     public function __construct(
         private readonly StructronConfig $structronConfig,
         private readonly StructronFinder $structronFinder,
+        private readonly StructronFileResolver $structronFileResolver,
+        private readonly StructronDocsResolver $structronDocsResolver,
     ) {
         parent::__construct();
     }
@@ -44,7 +48,12 @@ class StructronCommand extends Command
 
         $structronFinder = $this->structronFinder->getFilesFromStructronConfig($structronConfig);
 
-        $structron = new Structron($output, $structronConfig, $structronFinder);
+        $structron = new Structron(
+            $output,
+            $structronFinder,
+            $this->structronFileResolver,
+            $this->structronDocsResolver,
+        );
         $structron->run();
 
         $usageExecuteTime = Helper::formatTime(microtime(true) - $startExecuteTime);
