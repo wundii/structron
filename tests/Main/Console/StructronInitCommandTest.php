@@ -7,13 +7,13 @@ namespace Wundii\Structron\Tests\Main\Console;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Wundii\Structron\Console\Commands\StructronInitCommand;
 use Wundii\Structron\Bootstrap\BootstrapConfigInitializer;
+use Wundii\Structron\Console\Commands\StructronInitCommand;
 use Wundii\Structron\Tests\Main\Console\Files\MockStructronInitCommand;
 
 final class StructronInitCommandTest extends TestCase
 {
-    public function test_configure_sets_name_and_description(): void
+    public function testConfigureSetsNameAndDescription(): void
     {
         $initializer = $this->createMock(BootstrapConfigInitializer::class);
         $command = new StructronInitCommand($initializer);
@@ -30,7 +30,7 @@ final class StructronInitCommandTest extends TestCase
         );
     }
 
-    public function test_execute_calls_createConfig_and_returns_success(): void
+    public function testExecuteCallsCreateConfigAndReturnsSuccess(): void
     {
         $initializer = $this->createMock(BootstrapConfigInitializer::class);
         $initializer->expects(self::once())

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wundii\Structron\Tests\Main\Console\Files;
 
 use Symfony\Component\Console\Input\InputInterface;
