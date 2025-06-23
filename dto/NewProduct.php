@@ -16,6 +16,7 @@ final class NewProduct
 {
     /**
      * @param string[] $tags
+     * @param Option[] $options
      */
     public function __construct(
         #[Description('The unique identifier for the product')]
@@ -28,6 +29,10 @@ final class NewProduct
         private ?string $ean = null,
         #[Description('An array of tags associated with the product')]
         private array $tags = [],
+        #[Description('An optional option associated with the product, can be null')]
+        private ?Option $option = null,
+        #[Description('Additional options for the product, can be empty')]
+        private array $options = [],
     ) {
     }
 
@@ -85,5 +90,18 @@ final class NewProduct
     public function setTags(array $tags): void
     {
         $this->tags = $tags;
+    }
+
+    public function getOption(): ?Option
+    {
+        return $this->option;
+    }
+
+    /**
+     * @return Option[]
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 }

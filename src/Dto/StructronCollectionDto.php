@@ -10,12 +10,14 @@ final readonly class StructronCollectionDto
 {
     /**
      * @param StructronRowDto[] $collection
+     * @param string[] $descriptions
      */
     public function __construct(
         private ApproachEnum $approachEnum,
         private string $pathname,
         private string $classname,
         private array $collection,
+        private array $descriptions = [],
     ) {
     }
 
@@ -40,5 +42,13 @@ final readonly class StructronCollectionDto
     public function getCollection(): array
     {
         return $this->collection;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDescriptions(): array
+    {
+        return $this->descriptions;
     }
 }

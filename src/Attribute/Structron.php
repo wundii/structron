@@ -20,7 +20,7 @@ final readonly class Structron implements AttributeInterface
         return 'structron.structron';
     }
 
-    public function getValue(): ?string
+    public function getValue(): string
     {
         return $this->description;
     }
