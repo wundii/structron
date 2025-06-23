@@ -109,6 +109,7 @@ final class StructronFileResolver
             }
 
             if ($dataType === DataTypeEnum::ARRAY || $dataType === DataTypeEnum::OBJECT) {
+                /** @var class-string $targetType */
                 $reflection = new ReflectionClass($targetType);
                 if (! $reflection->isInternal()) {
                     yield new StructronRowDto(

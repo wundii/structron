@@ -50,7 +50,6 @@ final readonly class StructronDocsResolver
                 $this->filesystem->mkdir($directoryPathDocs, 0755);
             }
 
-
             $columnsMaxLength = new ColumnsMaxLength();
 
             foreach ($structronFileDto->getCollection() as $structronRowDto) {

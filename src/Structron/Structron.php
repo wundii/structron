@@ -50,7 +50,7 @@ final class Structron
         foreach ($this->structronFinder->files() as $structronFinder) {
             $filePath = $structronFinder->getRealPath();
 
-            if (!in_array($filePath, $includedFiles)) {
+            if (! in_array($filePath, $includedFiles, true)) {
                 require_once $filePath;
             }
         }
