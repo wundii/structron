@@ -6,11 +6,11 @@ namespace Wundii\Structron\Dto;
 
 final class ColumnsMaxLength
 {
-    public int $name = 0;
-
-    public int $type = 4;
-
-    public int $default = 7;
-
-    public int $description = 11;
+    public function __construct(
+        public int $name = 0,
+        public int $type = 0,
+        public int $default = 7,
+        public int $description = 0,
+    ) {
+    }
 }

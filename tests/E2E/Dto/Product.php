@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wundii\Structron\Dto;
+namespace Wundii\Structron\Tests\E2E\Dto;
 
 use Wundii\DataMapper\Enum\ApproachEnum;
 use Wundii\Structron\Attribute\Approach;
@@ -12,7 +12,7 @@ use Wundii\Structron\Attribute\Structron;
 #[Structron('A new product DTO')]
 #[Structron('This DTO represents a new product with various attributes such as product ID, name, number, EAN, and tags.')]
 #[Approach(ApproachEnum::CONSTRUCTOR)]
-final class NewProduct
+final class Product
 {
     /**
      * @param string[] $tags

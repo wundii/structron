@@ -27,7 +27,7 @@
       <file>tests/Init/Config/StructronConfigTest.php</file>
     </testsuite>
     <testsuite name="main">
-      <directory>tests/Main/Resolver/Config</directory>
+      <directory>tests/Main/Resolver</directory>
       <directory>tests/Main/Bootstrap</directory>
       <directory>tests/Main/DependencyInjection</directory>
       <directory>tests/Main/Finder</directory>

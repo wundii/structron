@@ -98,11 +98,8 @@ final class Structron
             $structronFileDtos[] = $structronFileDto;
         }
 
-        $structronCollectionDto = new StructronCollectionDto($structronFileDtos);
-
-        $this->structronDocsResolver->resolve($structronCollectionDto);
+        $this->structronDocsResolver->resolve(new StructronCollectionDto($structronFileDtos));
 
         $this->structronSymfonyStyle->progressBarFinish();
-        // $this->processResultToConsole($processResult);
     }
 }

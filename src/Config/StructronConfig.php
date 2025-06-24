@@ -15,6 +15,7 @@ final class StructronConfig extends StructronConfigParameter
         $this->setParameter(OptionEnum::PHP_EXTENSION, 'php');
         $this->setParameter(OptionEnum::DOC_PATH, 'structron-docs');
         $this->setParameter(OptionEnum::INDENT_FILE_ITERATION, false);
+        $this->setParameter(OptionEnum::TEST, false);
     }
 
     public function disableExitCode(): void

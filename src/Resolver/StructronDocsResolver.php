@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wundii\Structron\Resolver;
 
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Wundii\Structron\Config\OptionEnum;
 use Wundii\Structron\Config\StructronConfig;
@@ -21,15 +22,29 @@ final readonly class StructronDocsResolver
 
     public function resolve(StructronCollectionDto $structronCollectionDto): bool
     {
+        if ($structronCollectionDto->getStructronFileDtos() === []) {
+            return false;
+        }
+
+        $mode = 0755;
+        $user = 1000;
         $docPath = $this->structronConfig->getString(OptionEnum::DOC_PATH);
         $dtoPaths = $this->structronConfig->getArrayWithStrings(OptionEnum::PATHS);
         $phpExtension = $this->structronConfig->getString(OptionEnum::PHP_EXTENSION);
         $directoryPath = getcwd() . DIRECTORY_SEPARATOR . $docPath;
+        if ($this->structronConfig->getBoolean(OptionEnum::TEST)) {
+            $directoryPath = '/tmp/' . $docPath;
+            $mode = 0777;
+            $user = 0;
+            @mkdir($directoryPath, $mode, true);
+        }
+
         $markdownStructronFile = $directoryPath . DIRECTORY_SEPARATOR . '_Structron.md';
         $projectStructronFilePath = str_replace($directoryPath, '', $markdownStructronFile);
 
         if (! $this->filesystem->exists($directoryPath)) {
-            $this->filesystem->mkdir($directoryPath, 0755);
+            $this->filesystem->mkdir($directoryPath, $mode);
+            $this->filesystem->chown($directoryPath, $user, true);
         }
 
         $structronFileContent = '# Structron Documentation' . PHP_EOL;
@@ -53,12 +68,17 @@ final readonly class StructronDocsResolver
             $structronReturnPath = '.' . str_repeat('/..', $folderCount);
             $fileReturnPath = '.' . str_repeat('/..', $folderCount + 1);
 
-            $directoryPathDocs = getcwd() . DIRECTORY_SEPARATOR . $docPath . DIRECTORY_SEPARATOR . $folder;
-            if (! $this->filesystem->exists($directoryPathDocs)) {
-                $this->filesystem->mkdir($directoryPathDocs, 0755);
+            $directoryPathDocs = $directoryPath;
+            if ($folderCount) {
+                $directoryPathDocs .= DIRECTORY_SEPARATOR . $folder;
             }
 
-            $columnsMaxLength = new ColumnsMaxLength();
+            if (! $this->filesystem->exists($directoryPathDocs)) {
+                $this->filesystem->mkdir($directoryPathDocs, $mode);
+                $this->filesystem->chown($directoryPathDocs, $user, true);
+            }
+
+            $columnsMaxLength = new ColumnsMaxLength(0, 4, 7, 11);
             $classGlossary = [];
 
             foreach ($structronFileDto->getCollection() as $structronRowDto) {
@@ -119,15 +139,25 @@ final readonly class StructronDocsResolver
                 $fileContent .= str_pad($structronRowDto->getDescription(), $columnsMaxLength->description) . ' |' . PHP_EOL;
             }
 
-            $markdownFile = $directoryPathDocs . DIRECTORY_SEPARATOR . sprintf('/%s.md', $nativeName);
-            file_put_contents($markdownFile, $fileContent);
-            $this->filesystem->chmod($markdownFile, 0755);
+            $markdownFile = $directoryPathDocs . DIRECTORY_SEPARATOR . sprintf('%s.md', $nativeName);
+            $filePutContent = file_put_contents($markdownFile, $fileContent);
+            if ($filePutContent === false) {
+                throw new RuntimeException(sprintf('Could not write to file %s', $markdownFile));
+            }
+
+            $this->filesystem->chmod($markdownFile, $mode);
+            $this->filesystem->chown($markdownFile, $user);
 
             $structronFileContent .= '|[' . $structronFileDto->getClassname() . '](' . $folder . $nativeName . '.md)|' . count($structronFileDto->getCollection()) . '|' . PHP_EOL;
         }
 
-        file_put_contents($markdownStructronFile, $structronFileContent);
-        $this->filesystem->chmod($markdownStructronFile, 0755);
+        $filePutContent = file_put_contents($markdownStructronFile, $structronFileContent);
+        if ($filePutContent === false) {
+            throw new RuntimeException(sprintf('Could not write to file %s', $markdownStructronFile));
+        }
+
+        $this->filesystem->chmod($markdownStructronFile, $mode);
+        $this->filesystem->chown($markdownStructronFile, $user);
 
         return true;
     }

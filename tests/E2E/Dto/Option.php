@@ -2,18 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Wundii\Structron\Dto;
+namespace Wundii\Structron\Tests\E2E\Dto;
 
-use Wundii\DataMapper\Enum\ApproachEnum;
-use Wundii\Structron\Attribute\Approach;
 use Wundii\Structron\Attribute\Description;
-use Wundii\Structron\Attribute\Structron;
 
-#[Structron('A product option DTO')]
-#[Structron('This DTO represents a product option with an identifier and a name.')]
-#[Structron('It is used to define various options that can be associated with a product.')]
-#[Approach(ApproachEnum::CONSTRUCTOR)]
-final class Test
+final class Option
 {
     public function __construct(
         #[Description('The unique identifier for the option')]
