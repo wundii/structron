@@ -34,7 +34,7 @@ final class StructronFileResolver
     /**
      * @var array<string, ObjectPropertyDto>
      */
-    private array $objectPropertyDtos = [];
+    private static array $objectPropertyDtos = [];
 
     public function __construct()
     {
@@ -42,6 +42,7 @@ final class StructronFileResolver
     }
 
     /**
+     * @param string[] $processedClassNames
      * @return iterable<StructronRowDto>
      * @throws DataMapperException|ReflectionException
      *      */
@@ -50,6 +51,7 @@ final class StructronFileResolver
         DataConfigInterface $dataConfig,
         ObjectPropertyDto $objectPropertyDto,
         null|string $object,
+        array $processedClassNames = [],
         null|string $prefix = null,
         int $prefixLevel = 0,
     ): iterable {
@@ -59,6 +61,12 @@ final class StructronFileResolver
 
         if (is_string($object)) {
             $object = $dataConfig->mapClassName($object);
+
+            if (in_array($object, $processedClassNames, true)) {
+                return;
+            }
+
+            $processedClassNames[] = $object;
         }
 
         $targetObjectDto = $this->getObjectPropertyDto($object ?: '');
@@ -146,6 +154,7 @@ final class StructronFileResolver
                         $dataConfig,
                         $this->getObjectPropertyDto($targetType),
                         $targetType,
+                        $processedClassNames,
                         $name,
                         $prefixLevel,
                     ) as $row) {
@@ -206,11 +215,11 @@ final class StructronFileResolver
      */
     public function getObjectPropertyDto(string $className): ObjectPropertyDto
     {
-        if (array_key_exists($className, $this->objectPropertyDtos)) {
-            $objectPropertyDto = $this->objectPropertyDtos[$className];
+        if (array_key_exists($className, self::$objectPropertyDtos)) {
+            $objectPropertyDto = self::$objectPropertyDtos[$className];
         } else {
             $objectPropertyDto = $this->reflectionObjectResolver->resolve($className);
-            $this->objectPropertyDtos[$className] = $objectPropertyDto;
+            self::$objectPropertyDtos[$className] = $objectPropertyDto;
         }
 
         return $objectPropertyDto;

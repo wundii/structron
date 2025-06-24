@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Main\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use Wundii\DataMapper\Exception\DataMapperException;
 use Wundii\DataMapper\Exception\DataMapperInvalidArgumentException;
 use Wundii\Structron\Config\OptionEnum;
 use Wundii\Structron\Config\StructronConfig;
@@ -16,6 +18,10 @@ use Wundii\Structron\Resolver\StructronFileResolver;
 
 class StructronFileResolverTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     * @throws DataMapperException
+     */
     public function testResolveFilesNamespaceNotFound(): void
     {
         $this->expectException(DataMapperInvalidArgumentException::class);
@@ -35,6 +41,10 @@ class StructronFileResolverTest extends TestCase
         $resolver->resolve($config, $reflectionDto);
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws DataMapperException
+     */
     public function testResolveFilesNamespaceFoundSimple(): void
     {
         $config = new StructronConfig();
@@ -88,6 +98,10 @@ class StructronFileResolverTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws DataMapperException
+     */
     public function testResolveFilesNamespaceFoundComplex(): void
     {
         $config = new StructronConfig();
@@ -205,6 +219,54 @@ class StructronFileResolverTest extends TestCase
             [
                 'A new product DTO',
                 'This DTO represents a new product with various attributes such as product ID, name, number, EAN, and tags.',
+            ],
+        );
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws DataMapperException
+     */
+    public function testResolveFilesNamespaceFoundWithLoop(): void
+    {
+        $config = new StructronConfig();
+        $config->setParameter(OptionEnum::TEST, true);
+        $config->docPath('/temp/Docs');
+        $config->phpExtension('php');
+        $config->paths(['tests/E2E/Dto']);
+        $reflectionDto = new ReflectionDto(
+            getcwd() . '/tests/E2E/Dto/Loop.php',
+            'Wundii\Structron\Tests\E2E\Dto\Loop',
+            'Loop',
+        );
+
+        $resolver = new StructronFileResolver();
+
+        $result = $resolver->resolve($config, $reflectionDto);
+
+        $expected = new StructronFileDto(
+            getcwd() . '/tests/E2E/Dto/Loop.php',
+            'Wundii\Structron\Tests\E2E\Dto\Loop',
+            [
+                new StructronRowDto(
+                    StructronRowTypEnum::HEADER,
+                    'Loop',
+                    null,
+                    null,
+                    null,
+                ),
+                new StructronRowDto(
+                    StructronRowTypEnum::SUBHEADER,
+                    'loop',
+                    'Wundii\Structron\Tests\E2E\Dto\Loop',
+                    'required',
+                    'Loop Property',
+                ),
+            ],
+            [
+                'Loop Class',
             ],
         );
 
