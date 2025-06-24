@@ -33,6 +33,8 @@ final class Product
         private ?Option $option = null,
         #[Description('Additional options for the product, can be empty')]
         private array $options = [],
+        #[Description('An enum representing a test value')]
+        private TestEnum $testEnum = TestEnum::A,
     ) {
     }
 
@@ -103,5 +105,15 @@ final class Product
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getTestEnum(): TestEnum
+    {
+        return $this->testEnum;
+    }
+
+    public function setTestEnum(TestEnum $testEnum): void
+    {
+        $this->testEnum = $testEnum;
     }
 }
