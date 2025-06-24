@@ -8,7 +8,8 @@
 [![codecov](https://img.shields.io/codecov/c/github/wundii/structron/main?token=2P3BCYK88L&style=for-the-badge)](https://codecov.io/github/wundii/structron)
 [![Downloads](https://img.shields.io/packagist/dt/wundii/structron.svg?style=for-the-badge)](https://packagist.org/packages/wundii/structron)
 
-A simple documentation that dto prepares as a structured md. This is based on the data mapper.
+A PHP library for generating human-readable documentation from structured data objects like DTOs, Entities, and Value Objects.
+This is based on the data mapper.
 
 ## Installation
 Require the bundle and its dependencies with composer:
