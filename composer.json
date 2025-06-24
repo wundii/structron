@@ -88,6 +88,9 @@
     "unittest": [
       "php vendor/bin/phpunit --configuration phpunit.xml"
     ],
+    "structron": [
+      "php bin/structron"
+    ],
     "phplint": [
       "php vendor/bin/phplint"
     ],

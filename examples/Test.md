@@ -1,4 +1,4 @@
-# Wundii\Structron\Dto\Test
+# Wundii\Structron\Tests\E2E\Dto\Test
 - [Back to Structron Documentation](./_Structron.md)
 - [Go to Test.php](./../tests/E2E/Dto/Test.php)
 

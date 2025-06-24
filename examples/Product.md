@@ -1,4 +1,4 @@
-# Wundii\Structron\Dto\Product
+# Wundii\Structron\Tests\E2E\Dto\Product
 - [Back to Structron Documentation](./_Structron.md)
 - [Go to Product.php](./../tests/E2E/Dto/Product.php)
 
@@ -9,7 +9,7 @@ This DTO represents a new product with various attributes such as product ID, na
 ## Class glossary
 | FullObjectName | Object |
 | -------------- | ------ |
-| Wundii\Structron\Dto\Option | Option |
+| Wundii\Structron\Tests\E2E\Dto\Option | Option |
 
 ## Properties
 | Product                   | Type     | Default  | Description                                                   |
