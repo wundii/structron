@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Wundii\Structron\Dto;
 
-use Wundii\DataMapper\Enum\ApproachEnum;
-
 final readonly class StructronFileDto
 {
     /**
@@ -13,17 +11,11 @@ final readonly class StructronFileDto
      * @param string[] $descriptions
      */
     public function __construct(
-        private ApproachEnum $approachEnum,
         private string $pathname,
         private string $classname,
         private array $collection,
         private array $descriptions = [],
     ) {
-    }
-
-    public function getApproachEnum(): ApproachEnum
-    {
-        return $this->approachEnum;
     }
 
     public function getPathname(): string

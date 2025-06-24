@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Main\Resolver;
 
 use PHPUnit\Framework\TestCase;
-use Wundii\DataMapper\Enum\ApproachEnum;
 use Wundii\DataMapper\Exception\DataMapperInvalidArgumentException;
 use Wundii\Structron\Config\OptionEnum;
 use Wundii\Structron\Config\StructronConfig;
@@ -54,7 +53,6 @@ class StructronFileResolverTest extends TestCase
         $result = $resolver->resolve($config, $reflectionDto);
 
         $expected = new StructronFileDto(
-            ApproachEnum::CONSTRUCTOR,
             getcwd() . '/tests/E2E/Dto/Test.php',
             'Wundii\Structron\Tests\E2E\Dto\Test',
             [
@@ -108,7 +106,6 @@ class StructronFileResolverTest extends TestCase
         $result = $resolver->resolve($config, $reflectionDto);
 
         $expected = new StructronFileDto(
-            ApproachEnum::CONSTRUCTOR,
             getcwd() . '/tests/E2E/Dto/Product.php',
             'Wundii\Structron\Tests\E2E\Dto\Product',
             [

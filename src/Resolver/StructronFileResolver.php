@@ -277,7 +277,6 @@ final class StructronFileResolver
         }
 
         return new StructronFileDto(
-            $approachEnum,
             $reflectionDto->getPathname(),
             $reflectionDto->getClassName(),
             $structronRowDto,

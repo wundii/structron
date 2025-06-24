@@ -6,7 +6,6 @@ namespace Wundii\Structron\Tests\Main\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Wundii\DataMapper\Enum\ApproachEnum;
 use Wundii\Structron\Config\OptionEnum;
 use Wundii\Structron\Config\StructronConfig;
 use Wundii\Structron\Dto\StructronCollectionDto;
@@ -38,7 +37,6 @@ class StructronDocsResolverTest extends TestCase
     {
         $filesystem = $this->createMock(Filesystem::class);
         $fileDto = new StructronFileDto(
-            ApproachEnum::CONSTRUCTOR,
             getcwd() . '/tests/E2E/Dto/ExampleDto.php',
             'ExampleDto',
             [
