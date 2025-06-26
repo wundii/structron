@@ -9,14 +9,16 @@ use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Wundii\DataMapper\DataConfig;
-use Wundii\DataMapper\Dto\ObjectPropertyDto;
+use Wundii\DataMapper\Dto\AttributeDto;
 use Wundii\DataMapper\Dto\PropertyDto;
+use Wundii\DataMapper\Dto\ReflectionObjectDto;
 use Wundii\DataMapper\Enum\AccessibleEnum;
 use Wundii\DataMapper\Enum\ApproachEnum;
+use Wundii\DataMapper\Enum\AttributeOriginEnum;
 use Wundii\DataMapper\Enum\DataTypeEnum;
 use Wundii\DataMapper\Exception\DataMapperException;
 use Wundii\DataMapper\Interface\DataConfigInterface;
-use Wundii\DataMapper\Resolver\ReflectionObjectResolver;
+use Wundii\DataMapper\Resolver\ReflectionClassResolver;
 use Wundii\Structron\Attribute\Approach;
 use Wundii\Structron\Attribute\Description;
 use Wundii\Structron\Attribute\Structron;
@@ -29,27 +31,31 @@ use Wundii\Structron\Enum\StructronRowTypEnum;
 
 final class StructronFileResolver
 {
-    private ReflectionObjectResolver $reflectionObjectResolver;
+    /**
+     * â@phpstan-ignore-next-line
+     */
+    private ReflectionClassResolver $reflectionClassResolver;
 
     /**
-     * @var array<string, ObjectPropertyDto>
+     * @var array<string, ReflectionObjectDto>
      */
-    private static array $objectPropertyDtos = [];
+    private static array $reflectionObjectDtos = [];
 
     public function __construct()
     {
-        $this->reflectionObjectResolver = new ReflectionObjectResolver();
+        $this->reflectionClassResolver = new ReflectionClassResolver();
     }
 
     /**
      * @param string[] $processedClassNames
      * @return iterable<StructronRowDto>
      * @throws DataMapperException|ReflectionException
+     * @throws Exception
      *      */
     public function objectDto(
         StructronConfig $structronConfig,
         DataConfigInterface $dataConfig,
-        ObjectPropertyDto $objectPropertyDto,
+        ReflectionObjectDto $reflectionObjectDto,
         null|string $object,
         array $processedClassNames = [],
         null|string $prefix = null,
@@ -69,10 +75,10 @@ final class StructronFileResolver
             $processedClassNames[] = $object;
         }
 
-        $targetObjectDto = $this->getObjectPropertyDto($object ?: '');
+        $targetObjectDto = $this->getReflectionObjectDto($object ?: '');
 
-        foreach ($objectPropertyDto->getConstructor() as $propertyDto) {
-            $propertyDto = $targetObjectDto->findPropertyDto($dataConfig->getApproach(), $propertyDto->getName());
+        foreach ($reflectionObjectDto->getProperties() as $propertyDto) {
+            $propertyDto = $targetObjectDto->findElementDto($dataConfig->getApproach(), $propertyDto->getName());
             if (! $propertyDto instanceof PropertyDto) {
                 continue;
             }
@@ -81,17 +87,18 @@ final class StructronFileResolver
             $dataType = $propertyDto->getDataType();
             $targetType = $propertyDto->getTargetType();
             $description = $this->findOneAttribute(
-                $objectPropertyDto,
+                $reflectionObjectDto,
+                [AttributeOriginEnum::TARGET_PROPERTY, AttributeOriginEnum::TARGET_METHOD],
                 Description::class,
                 $name,
             );
 
-            if ($description instanceof PropertyDto) {
-                if (! is_string($description->getValue()) && $description->getValue() !== null) {
+            if ($description instanceof AttributeDto) {
+                if (! is_string($description->getArguments()['description'] ?? null) && $description->getArguments()['description'] !== null) {
                     throw new RuntimeException('The description attribute must be a string, ' . gettype($description) . ' given');
                 }
 
-                $description = $description->getValue();
+                $description = $description->getArguments()['description'];
             }
 
             $defaultValue = $propertyDto->getDefaultValue();
@@ -152,7 +159,7 @@ final class StructronFileResolver
                     foreach ($this->objectDto(
                         $structronConfig,
                         $dataConfig,
-                        $this->getObjectPropertyDto($targetType),
+                        $this->getReflectionObjectDto($targetType),
                         $targetType,
                         $processedClassNames,
                         $name,
@@ -177,17 +184,31 @@ final class StructronFileResolver
         }
     }
 
+    /**
+     * @param AttributeOriginEnum[] $attributeOriginEnums
+     */
     public function findOneAttribute(
-        ObjectPropertyDto $objectPropertyDto,
+        ReflectionObjectDto $reflectionObjectDto,
+        array $attributeOriginEnums,
         string $classStringName,
-        string $name,
-    ): ?PropertyDto {
-        foreach ($objectPropertyDto->getAttributes() as $propertyDto) {
+        ?string $name = null,
+    ): ?AttributeDto {
+        foreach ($reflectionObjectDto->getAttributes() as $attributeDto) {
             if (
-                $propertyDto->getAttributeClassString() === $classStringName
-                && $name === $propertyDto->getName()
+                $name
+                && $attributeDto->getClassString() === $classStringName
+                && in_array($attributeDto->getAttributeOriginEnum(), $attributeOriginEnums, true)
+                && $name === $attributeDto->getOriginName()
             ) {
-                return $propertyDto;
+                return $attributeDto;
+            }
+
+            if (
+                $name === null
+                && $attributeDto->getClassString() === $classStringName
+                && in_array($attributeDto->getAttributeOriginEnum(), $attributeOriginEnums, true)
+            ) {
+                return $attributeDto;
             }
         }
 
@@ -195,17 +216,18 @@ final class StructronFileResolver
     }
 
     /**
-     * @return PropertyDto[]
+     * @param AttributeOriginEnum[] $attributeOriginEnums
+     * @return AttributeDto[]
      */
     public function findAttribute(
-        ObjectPropertyDto $objectPropertyDto,
+        ReflectionObjectDto $reflectionObjectDto,
+        array $attributeOriginEnums,
         string $classStringName,
-        string $name,
     ): array {
         return array_filter(
-            $objectPropertyDto->getAttributes(),
-            static fn (PropertyDto $propertyDto): bool => $propertyDto->getAttributeClassString() === $classStringName
-                && $name === $propertyDto->getName()
+            $reflectionObjectDto->getAttributes(),
+            static fn (AttributeDto $attributeDto): bool => $attributeDto->getClassString() === $classStringName
+                && in_array($attributeDto->getAttributeOriginEnum(), $attributeOriginEnums, true)
         );
     }
 
@@ -213,16 +235,17 @@ final class StructronFileResolver
      * @throws ReflectionException
      * @throws DataMapperException
      */
-    public function getObjectPropertyDto(string $className): ObjectPropertyDto
+    public function getReflectionObjectDto(string $className): ReflectionObjectDto
     {
-        if (array_key_exists($className, self::$objectPropertyDtos)) {
-            $objectPropertyDto = self::$objectPropertyDtos[$className];
+        if (array_key_exists($className, self::$reflectionObjectDtos)) {
+            $reflectionObjectDto = self::$reflectionObjectDtos[$className];
         } else {
-            $objectPropertyDto = $this->reflectionObjectResolver->resolve($className);
-            self::$objectPropertyDtos[$className] = $objectPropertyDto;
+            /** @var class-string $className */
+            $reflectionObjectDto = $this->reflectionClassResolver->resolve($className);
+            self::$reflectionObjectDtos[$className] = $reflectionObjectDto;
         }
 
-        return $objectPropertyDto;
+        return $reflectionObjectDto;
     }
 
     /**
@@ -233,29 +256,30 @@ final class StructronFileResolver
         StructronConfig $structronConfig,
         ReflectionDto $reflectionDto,
     ): ?StructronFileDto {
-        $objectPropertyDto = $this->getObjectPropertyDto($reflectionDto->getClassName());
+        $reflectionObjectDto = $this->getReflectionObjectDto($reflectionDto->getClassName());
 
         if (! array_filter(
-            $objectPropertyDto->getAttributes(),
-            static fn (PropertyDto $propertyDto): bool => $propertyDto->getAttributeClassString() === Structron::class
+            $reflectionObjectDto->getAttributes(),
+            static fn (AttributeDto $attributeDto): bool => $attributeDto->getClassString() === Structron::class
         )) {
             return null;
         }
 
         $structronAttributes = $this->findAttribute(
-            $objectPropertyDto,
+            $reflectionObjectDto,
+            [AttributeOriginEnum::TARGET_CLASS],
             Structron::class,
-            'structron.structron'
         );
+
         $approachAttribute = $this->findOneAttribute(
-            $objectPropertyDto,
+            $reflectionObjectDto,
+            [AttributeOriginEnum::TARGET_CLASS],
             Approach::class,
-            'structron.approach'
         );
 
         $approachEnum = ApproachEnum::CONSTRUCTOR;
-        if ($approachAttribute instanceof PropertyDto) {
-            $approachEnum = $approachAttribute->getValue();
+        if ($approachAttribute instanceof AttributeDto) {
+            $approachEnum = $approachAttribute->getArguments()['approachEnum'] ?? null;
             if (! $approachEnum instanceof ApproachEnum) {
                 throw new RuntimeException(
                     'The approach attribute must be an instance of ' . ApproachEnum::class
@@ -281,7 +305,7 @@ final class StructronFileResolver
             ),
         ];
 
-        foreach ($this->objectDto($structronConfig, $dataConfig, $objectPropertyDto, $reflectionDto->getClassName()) as $row) {
+        foreach ($this->objectDto($structronConfig, $dataConfig, $reflectionObjectDto, $reflectionDto->getClassName()) as $row) {
             $structronRowDto[] = $row;
         }
 
@@ -290,7 +314,10 @@ final class StructronFileResolver
             $reflectionDto->getClassName(),
             $structronRowDto,
             array_map(
-                static fn (PropertyDto $propertyDto): string => is_string($propertyDto->getValue()) ? $propertyDto->getValue() : '',
+                static fn (AttributeDto $attributeDto): string
+                    => is_string($attributeDto->getArguments()['description'] ?? null)
+                    ? $attributeDto->getArguments()['description']
+                    : '',
                 $structronAttributes
             )
         );
