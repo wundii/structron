@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Wundii\Structron\Attribute;
 
 use Attribute;
-use Wundii\DataMapper\Interface\AttributeInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD)]
-final readonly class Description implements AttributeInterface
+final readonly class Description
 {
     public function __construct(
         private string $description,
     ) {
     }
 
-    public function getName(): ?string
-    {
-        return null;
-    }
-
-    public function getValue(): string
+    public function getDescription(): string
     {
         return $this->description;
     }

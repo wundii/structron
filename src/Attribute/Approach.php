@@ -6,22 +6,16 @@ namespace Wundii\Structron\Attribute;
 
 use Attribute;
 use Wundii\DataMapper\Enum\ApproachEnum;
-use Wundii\DataMapper\Interface\AttributeInterface;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-final readonly class Approach implements AttributeInterface
+final readonly class Approach
 {
     public function __construct(
         private ApproachEnum $approachEnum,
     ) {
     }
 
-    public function getName(): string
-    {
-        return 'structron.approach';
-    }
-
-    public function getValue(): ApproachEnum
+    public function getApproachEnum(): ApproachEnum
     {
         return $this->approachEnum;
     }
