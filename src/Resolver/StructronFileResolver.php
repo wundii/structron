@@ -18,7 +18,7 @@ use Wundii\DataMapper\Enum\AttributeOriginEnum;
 use Wundii\DataMapper\Enum\DataTypeEnum;
 use Wundii\DataMapper\Exception\DataMapperException;
 use Wundii\DataMapper\Interface\DataConfigInterface;
-use Wundii\DataMapper\Resolver\ReflectionClassResolver;
+use Wundii\DataMapper\Parser\ReflectionClassParser;
 use Wundii\Structron\Attribute\Approach;
 use Wundii\Structron\Attribute\Description;
 use Wundii\Structron\Attribute\Structron;
@@ -34,7 +34,7 @@ final class StructronFileResolver
     /**
      * â@phpstan-ignore-next-line
      */
-    private ReflectionClassResolver $reflectionClassResolver;
+    private ReflectionClassParser $reflectionClassParser;
 
     /**
      * @var array<string, ReflectionObjectDto>
@@ -43,7 +43,7 @@ final class StructronFileResolver
 
     public function __construct()
     {
-        $this->reflectionClassResolver = new ReflectionClassResolver();
+        $this->reflectionClassParser = new ReflectionClassParser();
     }
 
     /**
@@ -241,7 +241,7 @@ final class StructronFileResolver
             $reflectionObjectDto = self::$reflectionObjectDtos[$className];
         } else {
             /** @var class-string $className */
-            $reflectionObjectDto = $this->reflectionClassResolver->resolve($className);
+            $reflectionObjectDto = $this->reflectionClassParser->parse($className);
             self::$reflectionObjectDtos[$className] = $reflectionObjectDto;
         }
 
