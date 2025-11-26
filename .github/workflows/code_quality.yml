@@ -76,7 +76,7 @@ jobs:
         run: composer ecs-dry
 
   unittest:
-    needs: [ code-quality ]
+    needs: [ generate-matrix, code-quality ]
     name: 'PHP Unit and E2E Tests'
     runs-on: ubuntu-latest
     strategy:
