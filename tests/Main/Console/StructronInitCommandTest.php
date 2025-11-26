@@ -18,11 +18,6 @@ final class StructronInitCommandTest extends TestCase
         $initializer = $this->createMock(BootstrapConfigInitializer::class);
         $command = new StructronInitCommand($initializer);
 
-        $reflection = new \ReflectionClass($command);
-
-        $configureMethod = $reflection->getMethod('configure');
-        $configureMethod->setAccessible(true);
-
         self::assertSame('init', $command->getName());
         self::assertSame(
             'Create a new Structron configuration file if it does not exist',

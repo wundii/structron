@@ -299,9 +299,6 @@ final class StructronFileResolver
             new StructronRowDto(
                 StructronRowTypEnum::HEADER,
                 $reflectionDto->getClassShortName(),
-                null,
-                null,
-                null,
             ),
         ];
 
