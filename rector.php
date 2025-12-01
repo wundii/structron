@@ -36,6 +36,6 @@ return static function (RectorConfig $rectorConfig): void
 
     $rectorConfig->skip([
         ExplicitBoolCompareRector::class,
-        NewlineBetweenClassLikeStmtsRector::class
+        NewlineBetweenClassLikeStmtsRector::class,
     ]);
 };
