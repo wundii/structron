@@ -11,14 +11,23 @@ use Wundii\Structron\Config\StructronConfig;
 enum OptionEnum: string
 {
     case ANSI = 'ansi';
+
     case CONFIG = 'config';
+
     case HELP = 'help';
+
     case INIT = 'init';
+
     case NO_EXIT_CODE = 'no-exit-code';
+
     case NO_PROGRESS_BAR = 'no-progress-bar';
+
     case PATHS = 'paths';
+
     case SKIP = 'skip';
+
     case VERBOSE = 'verbose';
+
     case VERSION = 'version';
 
     /**
