@@ -43,7 +43,6 @@ final class StructronConfig extends StructronConfigParameter
      */
     public function paths(array $paths): void
     {
-        /** @phpstan-ignore staticMethod.alreadyNarrowedType */
         Assert::allString($paths);
 
         $this->setParameter(OptionEnum::PATHS, $paths);
@@ -54,7 +53,6 @@ final class StructronConfig extends StructronConfigParameter
      */
     public function skip(array $skip): void
     {
-        /** @phpstan-ignore staticMethod.alreadyNarrowedType */
         Assert::allString($skip);
 
         $this->setParameter(OptionEnum::SKIP, $skip);
