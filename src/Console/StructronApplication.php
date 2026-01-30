@@ -35,8 +35,8 @@ final class StructronApplication extends BaseApplication
     ) {
         parent::__construct(self::NAME, self::vendorVersion());
 
-        $this->add($structronCommand);
-        $this->add($structronInitCommand);
+        $this->addCommand($structronCommand);
+        $this->addCommand($structronInitCommand);
         $this->setDefaultCommand('structron');
         $this->setDefinition($this->getInputDefinition());
     }
