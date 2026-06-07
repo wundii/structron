@@ -40,7 +40,7 @@
     "phpunit/phpunit": "11.5.50",
     "rector/rector": "2.4.4",
     "symfony/var-dumper": "7.4.0 || 8.0.0",
-    "symplify/easy-coding-standard": "13.0.4",
+    "symplify/easy-coding-standard": "13.1.5",
     "wundii/phplint": "0.3.4"
   },
   "autoload": {
@@ -62,41 +62,30 @@
     "post-update-cmd": [
       "@auto-scripts"
     ],
-    "complete-check": [
-      "@cache-clear",
+    "analyze": [
       "@phplint",
-      "@rector-dry",
-      "@phpstan",
-      "@ecs-dry",
-      "@unittest"
+      "vendor/bin/rector process --dry-run --ansi",
+      "vendor/bin/ecs check",
+      "@stan"
     ],
-    "rector-dry": [
-      "php vendor/bin/rector process --dry-run --ansi"
+    "format": [
+      "vendor/bin/rector process",
+      "vendor/bin/ecs check --fix"
     ],
-    "rector-apply": [
-      "php vendor/bin/rector process --ansi"
+    "cache-clear": "rm -R ./cache/* -f",
+    "coverage": "vendor/bin/phpunit --coverage-clover coverage.xml",
+    "phplint": "vendor/bin/phplint",
+    "stan": "vendor/bin/phpstan analyze",
+    "qa": [
+      "@cache-clear",
+      "@analyze",
+      "@test"
     ],
-    "ecs-dry": [
-      "php vendor/bin/ecs check"
+    "qa-dry": [
+      "@cache-clear",
+      "@analyze"
     ],
-    "ecs-apply": [
-      "php vendor/bin/ecs check --fix"
-    ],
-    "phpstan": [
-      "php vendor/bin/phpstan analyse"
-    ],
-    "unittest": [
-      "php vendor/bin/phpunit --configuration phpunit.xml"
-    ],
-    "structron": [
-      "php bin/structron"
-    ],
-    "phplint": [
-      "php vendor/bin/phplint"
-    ],
-    "cache-clear": [
-      "rm -R ./cache/* -f"
-    ]
+    "test": "vendor/bin/phpunit"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
