@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Symfony\Component\Console\Input\ArgvInput;
 use Wundii\Structron\Console\StructronApplication;
 use Wundii\Structron\DependencyInjection\StructronContainerFactory;
-use Symfony\Component\Console\Input\ArgvInput;
 
 @ini_set('memory_limit', '-1');
 
