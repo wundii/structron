@@ -311,8 +311,7 @@ final class StructronFileResolver
             $reflectionDto->getClassName(),
             $structronRowDto,
             array_map(
-                static fn (AttributeDto $attributeDto): string
-                    => is_string($attributeDto->getArguments()['description'] ?? null)
+                static fn (AttributeDto $attributeDto): string => is_string($attributeDto->getArguments()['description'] ?? null)
                     ? $attributeDto->getArguments()['description']
                     : '',
                 $structronAttributes

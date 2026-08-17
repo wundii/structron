@@ -6,28 +6,23 @@ use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return function (ECSConfig $ecsConfig): void {
-    $ecsConfig->cacheDirectory('./cache/ecs');
-
-    $ecsConfig->paths([
+return ECSConfig::configure()
+    ->withCache('./cache/ecs')
+    ->withPaths([
         __DIR__ . '/config',
         __DIR__ . '/src',
         __DIR__ . '/tests',
-    ]);
-
-    $ecsConfig->skip([
+    ])
+    ->withSkip([
         __DIR__ . '/tests/FaultyFiles',
-    ]);
-
-    $ecsConfig->parallel();
-
+    ])
+    ->withParallel()
     // this way you add a single rule
-    $ecsConfig->rules([
+    ->withRules([
         NoUnusedImportsFixer::class,
-    ]);
-
+    ])
     // this way you can add sets - group of rules
-    $ecsConfig->sets([
+    ->withSets([
         SetList::ARRAY,
         SetList::CLEAN_CODE,
         SetList::COMMENTS,
@@ -38,4 +33,3 @@ return function (ECSConfig $ecsConfig): void {
         SetList::PSR_12,
         SetList::SPACES,
     ]);
-};

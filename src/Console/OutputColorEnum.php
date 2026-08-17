@@ -39,6 +39,7 @@ enum OutputColorEnum: string
 
     public function getBrightValue(): string
     {
-        return $this->getBrightEnum()->value;
+        return $this->getBrightEnum()
+            ->value;
     }
 }

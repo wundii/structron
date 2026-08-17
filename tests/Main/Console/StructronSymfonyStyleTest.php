@@ -84,13 +84,16 @@ final class StructronSymfonyStyleTest extends TestCase
             ->onlyMethods(['progressStart', 'progressAdvance', 'progressFinish'])
             ->getMock();
 
-        $style->expects($this->never())->method('progressStart');
+        $style->expects($this->never())
+            ->method('progressStart');
         $style->progressBarStart(10);
 
-        $style->expects($this->never())->method('progressAdvance');
+        $style->expects($this->never())
+            ->method('progressAdvance');
         $style->progressBarAdvance();
 
-        $style->expects($this->never())->method('progressFinish');
+        $style->expects($this->never())
+            ->method('progressFinish');
         $style->progressBarFinish();
     }
 
@@ -109,13 +112,17 @@ final class StructronSymfonyStyleTest extends TestCase
             ->onlyMethods(['progressStart', 'progressAdvance', 'progressFinish'])
             ->getMock();
 
-        $style->expects($this->once())->method('progressStart')->with(10);
+        $style->expects($this->once())
+            ->method('progressStart')
+            ->with(10);
         $style->progressBarStart(10);
 
-        $style->expects($this->once())->method('progressAdvance');
+        $style->expects($this->once())
+            ->method('progressAdvance');
         $style->progressBarAdvance();
 
-        $style->expects($this->once())->method('progressFinish');
+        $style->expects($this->once())
+            ->method('progressFinish');
         $style->progressBarFinish();
     }
 }

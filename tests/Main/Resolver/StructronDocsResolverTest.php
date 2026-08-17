@@ -101,10 +101,15 @@ class StructronDocsResolverTest extends TestCase
         $config->phpExtension('php');
         $config->paths(['tests/E2E/Dto']);
 
-        $filesystem->expects($this->atLeastOnce())->method('exists')->willReturn(false);
-        $filesystem->expects($this->atLeastOnce())->method('mkdir');
-        $filesystem->expects($this->atLeastOnce())->method('chown');
-        $filesystem->expects($this->atLeastOnce())->method('chmod');
+        $filesystem->expects($this->atLeastOnce())
+            ->method('exists')
+            ->willReturn(false);
+        $filesystem->expects($this->atLeastOnce())
+            ->method('mkdir');
+        $filesystem->expects($this->atLeastOnce())
+            ->method('chown');
+        $filesystem->expects($this->atLeastOnce())
+            ->method('chmod');
 
         $resolver = new StructronDocsResolver($config, $filesystem);
 

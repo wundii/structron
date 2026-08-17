@@ -36,8 +36,10 @@ class StructronContainerFactoryTest extends TestCase
     public function testCreateFromArgvInputWithDifferentStructronConfigFile()
     {
         $argvInput = $this->createMock(ArgvInput::class);
-        $argvInput->method('hasParameterOption')->willReturn(true);
-        $argvInput->method('getParameterOption')->willReturn(__DIR__ . '/Files/structron.php');
+        $argvInput->method('hasParameterOption')
+            ->willReturn(true);
+        $argvInput->method('getParameterOption')
+            ->willReturn(__DIR__ . '/Files/structron.php');
 
         $factory = new StructronContainerFactory();
         $container = $factory->createFromArgvInput($argvInput);

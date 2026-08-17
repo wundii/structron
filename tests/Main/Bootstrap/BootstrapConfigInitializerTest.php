@@ -25,8 +25,11 @@ class BootstrapConfigInitializerTest extends TestCase
         $projectDirectory = '/path/to/project';
 
         // Set up expectations
-        $filesystem->method('exists')->willReturn(true);
-        $symfonyStyle->expects($this->once())->method('warning')->with('The "structron.php" config already exists.');
+        $filesystem->method('exists')
+            ->willReturn(true);
+        $symfonyStyle->expects($this->once())
+            ->method('warning')
+            ->with('The "structron.php" config already exists.');
 
         // Act
         $initializer->createConfig($projectDirectory);
@@ -44,8 +47,11 @@ class BootstrapConfigInitializerTest extends TestCase
         $projectDirectory = '/path/to/project';
 
         // Set up expectations
-        $filesystem->method('exists')->willReturn(false);
-        $symfonyStyle->expects($this->once())->method('ask')->willReturn('no');
+        $filesystem->method('exists')
+            ->willReturn(false);
+        $symfonyStyle->expects($this->once())
+            ->method('ask')
+            ->willReturn('no');
 
         // Act
         $initializer->createConfig($projectDirectory);
@@ -64,13 +70,19 @@ class BootstrapConfigInitializerTest extends TestCase
         $configFile = $projectDirectory . DIRECTORY_SEPARATOR . 'structron.php';
 
         // Set up expectations
-        $filesystem->method('exists')->willReturn(false);
-        $symfonyStyle->method('ask')->willReturn('yes');
-        $filesystem->expects($this->once())->method('copy')->with(
-            getcwd() . '/src/Bootstrap/../../templates/structron.php.dist',
-            $configFile
-        );
-        $symfonyStyle->expects($this->once())->method('success')->with('The config file was generated! You can now run "bin/structron" to structron your code.');
+        $filesystem->method('exists')
+            ->willReturn(false);
+        $symfonyStyle->method('ask')
+            ->willReturn('yes');
+        $filesystem->expects($this->once())
+            ->method('copy')
+            ->with(
+                getcwd() . '/src/Bootstrap/../../templates/structron.php.dist',
+                $configFile
+            );
+        $symfonyStyle->expects($this->once())
+            ->method('success')
+            ->with('The config file was generated! You can now run "bin/structron" to structron your code.');
 
         // Act
         $initializer->createConfig($projectDirectory);
@@ -88,10 +100,15 @@ class BootstrapConfigInitializerTest extends TestCase
         $projectDirectory = '/path/to/project';
 
         // Set up expectations
-        $filesystem->method('exists')->willReturn(false);
-        $symfonyStyle->method('ask')->willReturn('yes');
-        $filesystem->method('copy')->willThrowException(new IOException(sprintf('Failed to copy "%s" to "%s".', 'source/file.txt', 'target/file.txt')));
-        $symfonyStyle->expects($this->once())->method('error')->with('Failed to copy "source/file.txt" to "target/file.txt".');
+        $filesystem->method('exists')
+            ->willReturn(false);
+        $symfonyStyle->method('ask')
+            ->willReturn('yes');
+        $filesystem->method('copy')
+            ->willThrowException(new IOException(sprintf('Failed to copy "%s" to "%s".', 'source/file.txt', 'target/file.txt')));
+        $symfonyStyle->expects($this->once())
+            ->method('error')
+            ->with('Failed to copy "source/file.txt" to "target/file.txt".');
 
         // Act
         $initializer->createConfig($projectDirectory);

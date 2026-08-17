@@ -45,7 +45,8 @@ final class BootstrapConfigRequirer
             if (
                 $reflectionParameter->hasType()
                 && $reflectionParameter->getType() instanceof ReflectionNamedType
-                && $reflectionParameter->getType()->getName() === StructronConfig::class
+                && $reflectionParameter->getType()
+                    ->getName() === StructronConfig::class
             ) {
                 break;
             }
